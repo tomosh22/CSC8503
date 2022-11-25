@@ -235,7 +235,23 @@ based on any forces that have been accumulated in the objects during
 the course of the previous game frame.
 */
 void PhysicsSystem::IntegrateAccel(float dt) {
+	std::vector<GameObject*>::const_iterator first;
+	std::vector<GameObject*>::const_iterator last;
+	gameWorld.GetObjectIterators(first, last);
 
+	for (auto i = first; i != last; i++) {
+		PhysicsObject* object = (*i)->GetPhysicsObject();
+		if (object == nullptr)continue;
+		
+		float inverseMass = object->GetInverseMass();
+		Vector3 linearVel = object->GetLinearVelocity();
+		Vector3 force = object->GetForce();
+		Vector3 accel = force * inverseMass;
+
+		if (applyGravity && inverseMass > 0) accel += gravity;
+		linearVel += accel * dt;
+		object->SetLinearVelocity(linearVel);
+	}
 }
 
 /*
@@ -245,7 +261,23 @@ throughout a physics update, to slowly move the objects through
 the world, looking for collisions.
 */
 void PhysicsSystem::IntegrateVelocity(float dt) {
+	std::vector<GameObject*>::const_iterator first;
+	std::vector<GameObject*>::const_iterator last;
+	gameWorld.GetObjectIterators(first, last);
 
+	float frameLinearDamping = 1 - (0.4 * dt);
+	for (auto i = first; i != last; i++)
+	{
+		PhysicsObject* object = (*i)->GetPhysicsObject();
+		if (object == nullptr)continue;
+		Transform& transform = (*i)->GetTransform();
+		Vector3 pos = transform.GetPosition();
+		Vector3 linearVel = object->GetLinearVelocity();
+		pos += linearVel * dt;
+		transform.SetPosition(pos);
+		linearVel *= frameLinearDamping;
+		object->SetLinearVelocity(linearVel);
+	}
 }
 
 /*
