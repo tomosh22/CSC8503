@@ -348,7 +348,7 @@ bool CollisionDetection::SAT(const Vector3 delta, const Vector3 plane, const Tra
 
 bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
 	const OBBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
-	Vector3 deltaPos = worldTransformB.GetPosition() - worldTransformA.GetPosition();
+	Vector3 deltaPos = worldTransformA.GetPosition() - worldTransformB.GetPosition();
 	Vector3 AForward = worldTransformA.GetOrientation() * Vector3(0, 0, 1);
 	Vector3 BForward = worldTransformB.GetOrientation() * Vector3(0, 0, 1);
 	Vector3 ARight = worldTransformA.GetOrientation() * Vector3(1, 0, 0);
@@ -385,7 +385,7 @@ bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transfo
 	{
 		if (!results[i])return false;
 	}
-	collisionInfo.AddContactPoint(Vector3(), Vector3(), Vector3(), penDistance);
+	collisionInfo.AddContactPoint(Vector3(), Vector3(), deltaPos.Normalised(), penDistance);
 	return true;
 
 }
