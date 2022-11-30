@@ -253,8 +253,8 @@ void TutorialGame::InitWorld() {
 
 	InitMixedGridWorld(15, 15, 3.5f, 3.5f);
 	
-	AddOBBToWorld(Vector3(-10,0,-10),Vector3(5,5,5));
-	AddOBBToWorld(Vector3(-10,0,-20),Vector3(5,5,5));
+	AddOBBToWorld(Vector3(-25,0,-10),Vector3(5,5,5));
+	AddOBBToWorld(Vector3(-5,0,-20),Vector3(5,5,5));
 
 	InitGameExamples();
 	InitDefaultFloor();
