@@ -62,7 +62,7 @@ namespace NCL {
 			}
 		};
 
-		static bool SAT(const Vector3 delta, const Vector3 plane, const Transform& worldTransformA, const Transform& worldTransformB, const Vector3 halfSizeA, const Vector3 halfSizeB);
+		static bool SAT(const Vector3 delta, const Vector3 plane, const Transform& worldTransformA, const Transform& worldTransformB, const Vector3 halfSizeA, const Vector3 halfSizeB, float& penDistance);
 
 		static bool AABBCapsuleIntersection(
 			const CapsuleVolume& volumeA, const Transform& worldTransformA,
