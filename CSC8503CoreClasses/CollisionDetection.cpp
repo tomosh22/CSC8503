@@ -318,9 +318,69 @@ bool CollisionDetection::SphereCapsuleIntersection(
 	return false;
 }
 
+bool CollisionDetection::SAT(const Vector3 delta, const Vector3 plane, const Transform& worldTransformA, const Transform& worldTransformB, const Vector3 halfSizeA, const Vector3 halfSizeB) {
+	//todo stop calculating these twice
+	Vector3 AForward = worldTransformA.GetOrientation() * Vector3(0, 0, 1);
+	Vector3 BForward = worldTransformB.GetOrientation() * Vector3(0, 0, 1);
+	Vector3 ARight = worldTransformA.GetOrientation() * Vector3(1, 0, 0);
+	Vector3 BRight = worldTransformB.GetOrientation() * Vector3(1, 0, 0);
+	Vector3 AUp = worldTransformA.GetOrientation() * Vector3(0, 1, 0);
+	Vector3 BUp = worldTransformB.GetOrientation() * Vector3(0, 1, 0);
+
+	float deltaPlaneDot = fabs(Vector3::Dot(delta, plane));
+	float rest =
+		fabs(Vector3::Dot(ARight * halfSizeA.x, plane)) +
+		fabs(Vector3::Dot(AUp * halfSizeA.y, plane)) +
+		fabs(Vector3::Dot(AForward * halfSizeA.z, plane)) +
+
+		fabs(Vector3::Dot(BRight * halfSizeB.x, plane)) +
+		fabs(Vector3::Dot(BUp * halfSizeB.y, plane)) +
+		fabs(Vector3::Dot(BForward * halfSizeB.z, plane));
+
+	bool result = deltaPlaneDot < rest;
+	return result;
+}
+
 bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
 	const OBBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
-	return false;
+	Vector3 deltaPos = worldTransformB.GetPosition() - worldTransformA.GetPosition();
+	Vector3 AForward = worldTransformA.GetOrientation() * Vector3(0, 0, 1);
+	Vector3 BForward = worldTransformB.GetOrientation() * Vector3(0, 0, 1);
+	Vector3 ARight = worldTransformA.GetOrientation() * Vector3(1, 0, 0);
+	Vector3 BRight = worldTransformB.GetOrientation() * Vector3(1, 0, 0);
+	Vector3 AUp = worldTransformA.GetOrientation() * Vector3(0, 1, 0);
+	Vector3 BUp = worldTransformB.GetOrientation() * Vector3(0, 1, 0);
+
+	bool results[15] = { false };
+	//faces
+	results[0] = SAT(deltaPos, ARight, worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions());
+	results[1] = SAT(deltaPos, AUp, worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions());
+	results[2] = SAT(deltaPos, AForward, worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions());
+
+	results[3] = SAT(deltaPos, BRight, worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions());
+	results[4] = SAT(deltaPos, BUp, worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions());
+	results[5] = SAT(deltaPos, BForward, worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions());
+
+
+	//edges
+	results[6] = SAT(deltaPos, Vector3::Cross(ARight, BRight), worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions());
+	results[7] = SAT(deltaPos, Vector3::Cross(ARight, BUp), worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions());
+	results[8] = SAT(deltaPos, Vector3::Cross(ARight, BForward), worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions());
+
+	results[9] = SAT(deltaPos, Vector3::Cross(AUp, BRight), worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions());
+	results[10] = SAT(deltaPos, Vector3::Cross(AUp, BUp), worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions());
+	results[11] = SAT(deltaPos, Vector3::Cross(AUp, BForward), worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions());
+
+	results[12] = SAT(deltaPos, Vector3::Cross(AForward, BRight), worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions());
+	results[13] = SAT(deltaPos, Vector3::Cross(AForward, BUp), worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions());
+	results[14] = SAT(deltaPos, Vector3::Cross(AForward, BForward), worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions());
+
+	for (int i = 0; i < 15; i++)
+	{
+		if (!results[i])return false;
+	}
+	return true;
+
 }
 
 Matrix4 GenerateInverseView(const Camera& c) {

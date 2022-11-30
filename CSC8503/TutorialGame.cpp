@@ -13,6 +13,8 @@
 using namespace NCL;
 using namespace CSC8503;
 
+
+
 TutorialGame::TutorialGame()	{
 	world		= new GameWorld();
 #ifdef USEVULKAN
@@ -250,6 +252,9 @@ void TutorialGame::InitWorld() {
 	physics->Clear();
 
 	InitMixedGridWorld(15, 15, 3.5f, 3.5f);
+	
+	AddOBBToWorld(Vector3(-10,0,-10),Vector3(5,5,5));
+	AddOBBToWorld(Vector3(-10,0,-20),Vector3(5,5,5));
 
 	InitGameExamples();
 	InitDefaultFloor();
@@ -313,7 +318,32 @@ GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius
 GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass) {
 	GameObject* cube = new GameObject();
 
+
 	AABBVolume* volume = new AABBVolume(dimensions);
+
+	cube->SetBoundingVolume((CollisionVolume*)volume);
+
+	cube->GetTransform()
+		.SetPosition(position)
+		.SetScale(dimensions * 2);
+
+	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
+	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
+
+	cube->GetPhysicsObject()->SetInverseMass(inverseMass);
+	cube->GetPhysicsObject()->InitCubeInertia();
+
+	world->AddGameObject(cube);
+
+	return cube;
+}
+
+GameObject* TutorialGame::AddOBBToWorld(const Vector3& position, Vector3 dimensions, float inverseMass) {
+	GameObject* cube = new GameObject();
+
+
+	OBBVolume* volume = new OBBVolume(dimensions);
+
 	cube->SetBoundingVolume((CollisionVolume*)volume);
 
 	cube->GetTransform()

@@ -11,6 +11,7 @@
 #include "CapsuleVolume.h"
 #include "Ray.h"
 
+
 using NCL::Camera;
 using namespace NCL::Maths;
 using namespace NCL::CSC8503;
@@ -60,6 +61,8 @@ namespace NCL {
 				return false;
 			}
 		};
+
+		static bool SAT(const Vector3 delta, const Vector3 plane, const Transform& worldTransformA, const Transform& worldTransformB, const Vector3 halfSizeA, const Vector3 halfSizeB);
 
 		static bool AABBCapsuleIntersection(
 			const CapsuleVolume& volumeA, const Transform& worldTransformA,
