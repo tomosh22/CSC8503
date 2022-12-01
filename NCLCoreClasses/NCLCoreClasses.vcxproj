@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4CEBDFE6-B5C5-3AD5-9BBB-F4686F53AC6C}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>NCLCoreClasses</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\tomos\source\repos\tomosh22\CSC8503\x64\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NCLCoreClasses.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NCLCoreClasses</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\tomos\source\repos\tomosh22\CSC8503\x64\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NCLCoreClasses.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NCLCoreClasses</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <ConformanceMode>true</ConformanceMode>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SDLCheck>true</SDLCheck>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_MBCS;ASSETROOTLOCATION="C:/Users/tomos/source/repos/tomosh22/CSC8503/Assets/";CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_MBCS;ASSETROOTLOCATION=\"C:/Users/tomos/source/repos/tomosh22/CSC8503/Assets/\";CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ConformanceMode>true</ConformanceMode>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SDLCheck>true</SDLCheck>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;_MBCS;ASSETROOTLOCATION="C:/Users/tomos/source/repos/tomosh22/CSC8503/Assets/";CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;_MBCS;ASSETROOTLOCATION=\"C:/Users/tomos/source/repos/tomosh22/CSC8503/Assets/\";CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/tomos/source/repos/tomosh22/CSC8503/NCLCoreClasses/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+C:\Users\tomos\Desktop\cmake-3.25.1-windows-x86_64\bin\cmake.exe -SC:/Users/tomos/source/repos/tomosh22/CSC8503 -BC:/Users/tomos/source/repos/tomosh22/CSC8503 --check-stamp-file C:/Users/tomos/source/repos/tomosh22/CSC8503/NCLCoreClasses/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\tomos\source\repos\tomosh22\CSC8503\CMake\Default.cmake;C:\Users\tomos\source\repos\tomosh22\CSC8503\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/tomos/source/repos/tomosh22/CSC8503/NCLCoreClasses/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+C:\Users\tomos\Desktop\cmake-3.25.1-windows-x86_64\bin\cmake.exe -SC:/Users/tomos/source/repos/tomosh22/CSC8503 -BC:/Users/tomos/source/repos/tomosh22/CSC8503 --check-stamp-file C:/Users/tomos/source/repos/tomosh22/CSC8503/NCLCoreClasses/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\tomos\source\repos\tomosh22\CSC8503\CMake\Default.cmake;C:\Users\tomos\source\repos\tomosh22\CSC8503\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Assets.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Assets.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\SimpleFont.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\SimpleFont.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\TextureLoader.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\TextureLoader.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\TextureWriter.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\TextureWriter.h" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Camera.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Maths.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Maths.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Matrix2.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Matrix2.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Matrix3.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Matrix3.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Matrix4.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Matrix4.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Plane.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Plane.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Quaternion.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Quaternion.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Vector2.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Vector2.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Vector3.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Vector3.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Vector4.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Vector4.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\MeshAnimation.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\MeshAnimation.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\MeshGeometry.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\MeshGeometry.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\MeshMaterial.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\MeshMaterial.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\RendererBase.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\RendererBase.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\ShaderBase.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\ShaderBase.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\TextureBase.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\TextureBase.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Camera.cpp" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\GameTimer.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\GameTimer.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Keyboard.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Keyboard.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Mouse.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Mouse.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Window.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Window.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Win32Keyboard.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Win32Keyboard.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Win32Mouse.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Win32Mouse.h" />
+    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Win32Window.cpp" />
+    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Win32Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\ZERO_CHECK.vcxproj">
+      <Project>{11DDDD5E-6E0F-3041-9648-B0BE5BCA9E6E}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
