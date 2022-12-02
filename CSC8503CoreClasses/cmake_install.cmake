@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503CoreClasses
+# Install script for directory: C:/Users/b9014614/CSC8503 2022/8503/CSC8503CoreClasses
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

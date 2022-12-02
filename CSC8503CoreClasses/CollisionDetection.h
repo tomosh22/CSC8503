@@ -110,6 +110,8 @@ namespace NCL {
 		static bool OBBSphereIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
 			const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
 
+		static bool OBBAABBIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
+			const AABBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
 
 		static Vector3 Unproject(const Vector3& screenPos, const Camera& cam);
 

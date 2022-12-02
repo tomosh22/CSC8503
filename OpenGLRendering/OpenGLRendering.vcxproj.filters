@@ -1,55 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLComputeShader.h">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLComputeShader.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLMesh.h">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLMesh.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLRenderer.h">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLRenderer.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLShader.h">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLShader.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLTexture.h">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLTexture.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLComputeShader.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLComputeShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLMesh.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLRenderer.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLShader.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLTexture.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\glad\gl.h">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\glad\gl.h">
       <Filter>GLAD</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\glad\gl.c">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\glad\gl.c">
       <Filter>GLAD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="GLAD">
-      <UniqueIdentifier>{AAB61C00-3163-3275-B1FC-18265667F22D}</UniqueIdentifier>
+      <UniqueIdentifier>{ACEC0379-958E-3E49-B88A-EA2BF2C798E7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{21955DA5-9F23-32F9-BFA8-C53211C6487F}</UniqueIdentifier>
+      <UniqueIdentifier>{133FF0FE-F605-331C-8EAF-6F97965CA098}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{B03E9F04-4906-3D47-8F1F-4453378B4366}</UniqueIdentifier>
+      <UniqueIdentifier>{6CC23769-D693-3810-AEDA-E3E40D4F3C04}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

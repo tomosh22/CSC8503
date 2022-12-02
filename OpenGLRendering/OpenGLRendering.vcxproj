@@ -14,9 +14,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8B2E624A-57F6-3A67-8AEC-25CD5D3D8028}</ProjectGuid>
+    <ProjectGuid>{FA23A365-19EB-3F20-BF84-E5816F904863}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
     <ProjectName>OpenGLRendering</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
@@ -42,18 +42,18 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\tomos\source\repos\tomosh22\CSC8503\x64\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\b9014614\CSC8503 2022\8503\x64\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">OpenGLRendering.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">OpenGLRendering</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\tomos\source\repos\tomosh22\CSC8503\x64\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\b9014614\CSC8503 2022\8503\x64\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">OpenGLRendering.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">OpenGLRendering</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\..\NCLCoreClasses;C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\..\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\..\NCLCoreClasses;C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\..\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -65,15 +65,15 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;UNICODE;_UNICODE;ASSETROOTLOCATION="C:/Users/tomos/source/repos/tomosh22/CSC8503/Assets/";CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;UNICODE;_UNICODE;ASSETROOTLOCATION="C:/Users/b9014614/CSC8503 2022/8503/Assets/";CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;UNICODE;_UNICODE;ASSETROOTLOCATION=\"C:/Users/tomos/source/repos/tomosh22/CSC8503/Assets/\";CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\..\NCLCoreClasses;C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\..\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;UNICODE;_UNICODE;ASSETROOTLOCATION=\"C:/Users/b9014614/CSC8503 2022/8503/Assets/\";CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\..\NCLCoreClasses;C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\..\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\..\NCLCoreClasses;C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\..\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\..\NCLCoreClasses;C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\..\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -86,7 +86,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\..\NCLCoreClasses;C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\..\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\..\NCLCoreClasses;C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\..\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -96,17 +96,17 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;UNICODE;_UNICODE;ASSETROOTLOCATION="C:/Users/tomos/source/repos/tomosh22/CSC8503/Assets/";CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;UNICODE;_UNICODE;ASSETROOTLOCATION="C:/Users/b9014614/CSC8503 2022/8503/Assets/";CMAKE_INTDIR="Release"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;UNICODE;_UNICODE;ASSETROOTLOCATION=\"C:/Users/tomos/source/repos/tomosh22/CSC8503/Assets/\";CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\..\NCLCoreClasses;C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\..\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;UNICODE;_UNICODE;ASSETROOTLOCATION=\"C:/Users/b9014614/CSC8503 2022/8503/Assets/\";CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\..\NCLCoreClasses;C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\..\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\..\NCLCoreClasses;C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\..\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\..\NCLCoreClasses;C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\..\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -118,11 +118,11 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\CMakeLists.txt">
+    <CustomBuild Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/tomos/source/repos/tomosh22/CSC8503/OpenGLRendering/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/b9014614/CSC8503 2022/8503/OpenGLRendering/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\Users\tomos\Desktop\cmake-3.25.1-windows-x86_64\bin\cmake.exe -SC:/Users/tomos/source/repos/tomosh22/CSC8503 -BC:/Users/tomos/source/repos/tomosh22/CSC8503 --check-stamp-file C:/Users/tomos/source/repos/tomosh22/CSC8503/OpenGLRendering/CMakeFiles/generate.stamp
+\\campus\home\home2019\b9014614\cmake-3.25.0-windows-x86_64\bin\cmake.exe "-SC:/Users/b9014614/CSC8503 2022/8503" "-BC:/Users/b9014614/CSC8503 2022/8503" --check-stamp-file "C:/Users/b9014614/CSC8503 2022/8503/OpenGLRendering/CMakeFiles/generate.stamp"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -130,12 +130,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\tomos\source\repos\tomosh22\CSC8503\CMake\Default.cmake;C:\Users\tomos\source\repos\tomosh22\CSC8503\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\b9014614\CSC8503 2022\8503\CMake\Default.cmake;C:\Users\b9014614\CSC8503 2022\8503\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/tomos/source/repos/tomosh22/CSC8503/OpenGLRendering/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/b9014614/CSC8503 2022/8503/OpenGLRendering/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-C:\Users\tomos\Desktop\cmake-3.25.1-windows-x86_64\bin\cmake.exe -SC:/Users/tomos/source/repos/tomosh22/CSC8503 -BC:/Users/tomos/source/repos/tomosh22/CSC8503 --check-stamp-file C:/Users/tomos/source/repos/tomosh22/CSC8503/OpenGLRendering/CMakeFiles/generate.stamp
+\\campus\home\home2019\b9014614\cmake-3.25.0-windows-x86_64\bin\cmake.exe "-SC:/Users/b9014614/CSC8503 2022/8503" "-BC:/Users/b9014614/CSC8503 2022/8503" --check-stamp-file "C:/Users/b9014614/CSC8503 2022/8503/OpenGLRendering/CMakeFiles/generate.stamp"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -143,72 +143,72 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\tomos\source\repos\tomosh22\CSC8503\CMake\Default.cmake;C:\Users\tomos\source\repos\tomosh22\CSC8503\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\b9014614\CSC8503 2022\8503\CMake\Default.cmake;C:\Users\b9014614\CSC8503 2022\8503\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLComputeShader.h">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLComputeShader.h">
       <ObjectFileName>$(IntDir)/OGLComputeShader.h.obj</ObjectFileName>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLMesh.h">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLMesh.h">
       <ObjectFileName>$(IntDir)/OGLMesh.h.obj</ObjectFileName>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLRenderer.h">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLRenderer.h">
       <ObjectFileName>$(IntDir)/OGLRenderer.h.obj</ObjectFileName>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLShader.h">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLShader.h">
       <ObjectFileName>$(IntDir)/OGLShader.h.obj</ObjectFileName>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLTexture.h">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLTexture.h">
       <ObjectFileName>$(IntDir)/OGLTexture.h.obj</ObjectFileName>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLComputeShader.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLComputeShader.cpp">
       <ObjectFileName>$(IntDir)/OGLComputeShader.cpp.obj</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLMesh.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLMesh.cpp">
       <ObjectFileName>$(IntDir)/OGLMesh.cpp.obj</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLRenderer.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLRenderer.cpp">
       <ObjectFileName>$(IntDir)/OGLRenderer.cpp.obj</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLShader.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLShader.cpp">
       <ObjectFileName>$(IntDir)/OGLShader.cpp.obj</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OGLTexture.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OGLTexture.cpp">
       <ObjectFileName>$(IntDir)/OGLTexture.cpp.obj</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\glad\gl.h">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\glad\gl.h">
       <ObjectFileName>$(IntDir)/glad/gl.h.obj</ObjectFileName>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\glad\gl.c">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\glad\gl.c">
       <ObjectFileName>$(IntDir)/glad/gl.c.obj</ObjectFileName>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\ZERO_CHECK.vcxproj">
-      <Project>{11DDDD5E-6E0F-3041-9648-B0BE5BCA9E6E}</Project>
+    <ProjectReference Include="C:\Users\b9014614\CSC8503 2022\8503\ZERO_CHECK.vcxproj">
+      <Project>{C964E386-264B-31C4-AE5E-741D1BDEAAD1}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\NCLCoreClasses.vcxproj">
-      <Project>{4CEBDFE6-B5C5-3AD5-9BBB-F4686F53AC6C}</Project>
+    <ProjectReference Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\NCLCoreClasses.vcxproj">
+      <Project>{93214525-78C8-34CB-A52A-7D8F02875BC7}</Project>
       <Name>NCLCoreClasses</Name>
     </ProjectReference>
   </ItemGroup>

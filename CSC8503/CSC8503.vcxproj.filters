@@ -1,63 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\CMakeFiles\CSC8503.dir\cmake_pch.cxx">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\CMakeFiles\CSC8503.dir\cmake_pch.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\GameTechRenderer.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\GameTechRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\Main.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\NetworkedGame.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\NetworkedGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\NetworkPlayer.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\NetworkPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\StateGameObject.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\StateGameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\TutorialGame.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\TutorialGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\GameTechRenderer.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\GameTechRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\NetworkedGame.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\NetworkedGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\NetworkPlayer.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\NetworkPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\StateGameObject.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\StateGameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\TutorialGame.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\TutorialGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\CMakeFiles\CSC8503.dir\Debug\cmake_pch.hxx">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\CMakeFiles\CSC8503.dir\Debug\cmake_pch.hxx">
       <Filter>Precompile Header File</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\CMakeFiles\CSC8503.dir\Release\cmake_pch.hxx">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\CMakeFiles\CSC8503.dir\Release\cmake_pch.hxx">
       <Filter>Precompile Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{21955DA5-9F23-32F9-BFA8-C53211C6487F}</UniqueIdentifier>
+      <UniqueIdentifier>{133FF0FE-F605-331C-8EAF-6F97965CA098}</UniqueIdentifier>
     </Filter>
     <Filter Include="Precompile Header File">
-      <UniqueIdentifier>{336BD29E-B065-3981-8EE0-8142635956DC}</UniqueIdentifier>
+      <UniqueIdentifier>{7E0A0F1C-4C86-3D29-9EF7-FBD9B990AB65}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{B03E9F04-4906-3D47-8F1F-4453378B4366}</UniqueIdentifier>
+      <UniqueIdentifier>{6CC23769-D693-3810-AEDA-E3E40D4F3C04}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

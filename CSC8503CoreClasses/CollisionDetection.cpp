@@ -179,6 +179,16 @@ bool CollisionDetection::ObjectIntersection(GameObject* a, GameObject* b, Collis
 		return OBBSphereIntersection((OBBVolume&)*volB, transformB, (SphereVolume&)*volA, transformA, collisionInfo);
 	}
 
+	//OBB vs AABB pairs
+	if (volA->type == VolumeType::OBB && volB->type == VolumeType::AABB) {
+		return OBBAABBIntersection((OBBVolume&)*volA, transformA, (AABBVolume&)*volB, transformB, collisionInfo);
+	}
+	if (volA->type == VolumeType::AABB && volB->type == VolumeType::OBB) {
+		collisionInfo.a = b;
+		collisionInfo.b = a;
+		return OBBAABBIntersection((OBBVolume&)*volB, transformB, (AABBVolume&)*volA, transformA, collisionInfo);
+	}
+
 	//Capsule vs other interactions
 	if (volA->type == VolumeType::Capsule && volB->type == VolumeType::Sphere) {
 		return SphereCapsuleIntersection((CapsuleVolume&)*volA, transformA, (SphereVolume&)*volB, transformB, collisionInfo);
@@ -325,6 +335,20 @@ bool  CollisionDetection::OBBSphereIntersection(const OBBVolume& volumeA, const 
 	return false;
 }
 
+bool  CollisionDetection::OBBAABBIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
+	const AABBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
+
+	OBBVolume tempVolume = OBBVolume(volumeB.GetHalfDimensions());
+	if (OBBIntersection(volumeA, worldTransformA, tempVolume, worldTransformB, collisionInfo)) {
+		collisionInfo.point.normal = worldTransformB.GetOrientation() * Vector3(0, -1, 0);
+		collisionInfo.point.localB = Vector3();
+		return true;
+	}
+		
+	return false;
+}
+
+
 bool CollisionDetection::AABBCapsuleIntersection(
 	const CapsuleVolume& volumeA, const Transform& worldTransformA,
 	const AABBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
@@ -404,7 +428,8 @@ bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transfo
 	{
 		if (!results[i])return false;
 	}
-	collisionInfo.AddContactPoint(Vector3(), Vector3(), deltaPos.Normalised(), penDistance);
+	//todo calculate contact point properly
+	collisionInfo.AddContactPoint(deltaPos/2, -deltaPos/2, deltaPos.Normalised(), penDistance);
 	return true;
 
 }

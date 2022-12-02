@@ -14,9 +14,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A906A224-5E6B-3186-BD45-E8BF4F70705B}</ProjectGuid>
+    <ProjectGuid>{8ABD0084-A13C-3A3F-8C20-7D0BD9F5820A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
     <ProjectName>CSC8503</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
@@ -42,13 +42,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\tomos\source\repos\tomosh22\CSC8503\x64\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\b9014614\CSC8503 2022\8503\x64\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CSC8503.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CSC8503</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\tomos\source\repos\tomosh22\CSC8503\x64\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\b9014614\CSC8503 2022\8503\x64\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CSC8503.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CSC8503</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
@@ -56,7 +56,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\..\OpenGLRendering;C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\..\NCLCoreClasses;C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\..\CSC8503CoreClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b9014614\CSC8503 2022\8503\CSC8503\..\OpenGLRendering;C:\Users\b9014614\CSC8503 2022\8503\CSC8503\..\NCLCoreClasses;C:\Users\b9014614\CSC8503 2022\8503\CSC8503\..\CSC8503CoreClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <ConformanceMode>true</ConformanceMode>
@@ -66,22 +66,22 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CSC8503.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderFile>C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CSC8503.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <SDLCheck>true</SDLCheck>
       <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCKAPI_;_WINSOCK2API_;_WINSOCK_DEPRECATED_NO_WARNINGS;ASSETROOTLOCATION="C:/Users/tomos/source/repos/tomosh22/CSC8503/Assets/";CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCKAPI_;_WINSOCK2API_;_WINSOCK_DEPRECATED_NO_WARNINGS;ASSETROOTLOCATION="C:/Users/b9014614/CSC8503 2022/8503/Assets/";CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCKAPI_;_WINSOCK2API_;_WINSOCK_DEPRECATED_NO_WARNINGS;ASSETROOTLOCATION=\"C:/Users/tomos/source/repos/tomosh22/CSC8503/Assets/\";CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\..\OpenGLRendering;C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\..\NCLCoreClasses;C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\..\CSC8503CoreClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCKAPI_;_WINSOCK2API_;_WINSOCK_DEPRECATED_NO_WARNINGS;ASSETROOTLOCATION=\"C:/Users/b9014614/CSC8503 2022/8503/Assets/\";CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\b9014614\CSC8503 2022\8503\CSC8503\..\OpenGLRendering;C:\Users\b9014614\CSC8503 2022\8503\CSC8503\..\NCLCoreClasses;C:\Users\b9014614\CSC8503 2022\8503\CSC8503\..\CSC8503CoreClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\..\OpenGLRendering;C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\..\NCLCoreClasses;C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\..\CSC8503CoreClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b9014614\CSC8503 2022\8503\CSC8503\..\OpenGLRendering;C:\Users\b9014614\CSC8503 2022\8503\CSC8503\..\NCLCoreClasses;C:\Users\b9014614\CSC8503 2022\8503\CSC8503\..\CSC8503CoreClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -94,8 +94,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/tomos/source/repos/tomosh22/CSC8503/x64/Debug/CSC8503.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Users/tomos/source/repos/tomosh22/CSC8503/x64/Debug/CSC8503.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Users/b9014614/CSC8503 2022/8503/x64/Debug/CSC8503.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/b9014614/CSC8503 2022/8503/x64/Debug/CSC8503.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -104,7 +104,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\..\OpenGLRendering;C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\..\NCLCoreClasses;C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\..\CSC8503CoreClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b9014614\CSC8503 2022\8503\CSC8503\..\OpenGLRendering;C:\Users\b9014614\CSC8503 2022\8503\CSC8503\..\NCLCoreClasses;C:\Users\b9014614\CSC8503 2022\8503\CSC8503\..\CSC8503CoreClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -115,22 +115,22 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CSC8503.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderFile>C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CSC8503.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <SDLCheck>true</SDLCheck>
       <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCKAPI_;_WINSOCK2API_;_WINSOCK_DEPRECATED_NO_WARNINGS;ASSETROOTLOCATION="C:/Users/tomos/source/repos/tomosh22/CSC8503/Assets/";CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCKAPI_;_WINSOCK2API_;_WINSOCK_DEPRECATED_NO_WARNINGS;ASSETROOTLOCATION="C:/Users/b9014614/CSC8503 2022/8503/Assets/";CMAKE_INTDIR="Release"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCKAPI_;_WINSOCK2API_;_WINSOCK_DEPRECATED_NO_WARNINGS;ASSETROOTLOCATION=\"C:/Users/tomos/source/repos/tomosh22/CSC8503/Assets/\";CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\..\OpenGLRendering;C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\..\NCLCoreClasses;C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\..\CSC8503CoreClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCKAPI_;_WINSOCK2API_;_WINSOCK_DEPRECATED_NO_WARNINGS;ASSETROOTLOCATION=\"C:/Users/b9014614/CSC8503 2022/8503/Assets/\";CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\b9014614\CSC8503 2022\8503\CSC8503\..\OpenGLRendering;C:\Users\b9014614\CSC8503 2022\8503\CSC8503\..\NCLCoreClasses;C:\Users\b9014614\CSC8503 2022\8503\CSC8503\..\CSC8503CoreClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\..\OpenGLRendering;C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\..\NCLCoreClasses;C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\..\CSC8503CoreClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\b9014614\CSC8503 2022\8503\CSC8503\..\OpenGLRendering;C:\Users\b9014614\CSC8503 2022\8503\CSC8503\..\NCLCoreClasses;C:\Users\b9014614\CSC8503 2022\8503\CSC8503\..\CSC8503CoreClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -144,9 +144,9 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/tomos/source/repos/tomosh22/CSC8503/x64/Release/CSC8503.lib</ImportLibrary>
+      <ImportLibrary>C:/Users/b9014614/CSC8503 2022/8503/x64/Release/CSC8503.lib</ImportLibrary>
       <OptimizeReferences>true</OptimizeReferences>
-      <ProgramDataBaseFile>C:/Users/tomos/source/repos/tomosh22/CSC8503/x64/Release/CSC8503.pdb</ProgramDataBaseFile>
+      <ProgramDataBaseFile>C:/Users/b9014614/CSC8503 2022/8503/x64/Release/CSC8503.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -154,11 +154,11 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\CMakeLists.txt">
+    <CustomBuild Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\Users\tomos\Desktop\cmake-3.25.1-windows-x86_64\bin\cmake.exe -SC:/Users/tomos/source/repos/tomosh22/CSC8503 -BC:/Users/tomos/source/repos/tomosh22/CSC8503 --check-stamp-file C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/generate.stamp
+\\campus\home\home2019\b9014614\cmake-3.25.0-windows-x86_64\bin\cmake.exe "-SC:/Users/b9014614/CSC8503 2022/8503" "-BC:/Users/b9014614/CSC8503 2022/8503" --check-stamp-file "C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/generate.stamp"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -166,12 +166,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\tomos\source\repos\tomosh22\CSC8503\CMake\Default.cmake;C:\Users\tomos\source\repos\tomosh22\CSC8503\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\b9014614\CSC8503 2022\8503\CMake\Default.cmake;C:\Users\b9014614\CSC8503 2022\8503\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\b9014614\CSC8503 2022\8503\CSC8503\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-C:\Users\tomos\Desktop\cmake-3.25.1-windows-x86_64\bin\cmake.exe -SC:/Users/tomos/source/repos/tomosh22/CSC8503 -BC:/Users/tomos/source/repos/tomosh22/CSC8503 --check-stamp-file C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/generate.stamp
+\\campus\home\home2019\b9014614\cmake-3.25.0-windows-x86_64\bin\cmake.exe "-SC:/Users/b9014614/CSC8503 2022/8503" "-BC:/Users/b9014614/CSC8503 2022/8503" --check-stamp-file "C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/generate.stamp"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -179,71 +179,71 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\tomos\source\repos\tomosh22\CSC8503\CMake\Default.cmake;C:\Users\tomos\source\repos\tomosh22\CSC8503\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\b9014614\CSC8503 2022\8503\CMake\Default.cmake;C:\Users\b9014614\CSC8503 2022\8503\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\b9014614\CSC8503 2022\8503\CSC8503\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\CMakeFiles\CSC8503.dir\cmake_pch.cxx">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\CMakeFiles\CSC8503.dir\cmake_pch.cxx">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CSC8503.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CSC8503.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CSC8503.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CSC8503.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\GameTechRenderer.h" />
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\NetworkedGame.h" />
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\NetworkPlayer.h" />
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\StateGameObject.h" />
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\TutorialGame.h" />
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\GameTechRenderer.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\GameTechRenderer.h" />
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\NetworkedGame.h" />
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\NetworkPlayer.h" />
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\StateGameObject.h" />
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\TutorialGame.h" />
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\GameTechRenderer.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\Main.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\Main.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\NetworkedGame.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\NetworkedGame.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\NetworkPlayer.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\NetworkPlayer.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\StateGameObject.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\StateGameObject.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\TutorialGame.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/tomos/source/repos/tomosh22/CSC8503/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\TutorialGame.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/b9014614/CSC8503 2022/8503/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\CMakeFiles\CSC8503.dir\Debug\cmake_pch.hxx" />
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503\CMakeFiles\CSC8503.dir\Release\cmake_pch.hxx" />
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\CMakeFiles\CSC8503.dir\Debug\cmake_pch.hxx" />
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503\CMakeFiles\CSC8503.dir\Release\cmake_pch.hxx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\ZERO_CHECK.vcxproj">
-      <Project>{11DDDD5E-6E0F-3041-9648-B0BE5BCA9E6E}</Project>
+    <ProjectReference Include="C:\Users\b9014614\CSC8503 2022\8503\ZERO_CHECK.vcxproj">
+      <Project>{C964E386-264B-31C4-AE5E-741D1BDEAAD1}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\CSC8503CoreClasses\CSC8503CoreClasses.vcxproj">
-      <Project>{AC3FB3F4-1538-3DCF-B517-462C773F7DC0}</Project>
+    <ProjectReference Include="C:\Users\b9014614\CSC8503 2022\8503\CSC8503CoreClasses\CSC8503CoreClasses.vcxproj">
+      <Project>{42D50C8C-9E42-3E23-B3B3-A5C598A45AC9}</Project>
       <Name>CSC8503CoreClasses</Name>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\NCLCoreClasses.vcxproj">
-      <Project>{4CEBDFE6-B5C5-3AD5-9BBB-F4686F53AC6C}</Project>
+    <ProjectReference Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\NCLCoreClasses.vcxproj">
+      <Project>{93214525-78C8-34CB-A52A-7D8F02875BC7}</Project>
       <Name>NCLCoreClasses</Name>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\OpenGLRendering\OpenGLRendering.vcxproj">
-      <Project>{8B2E624A-57F6-3A67-8AEC-25CD5D3D8028}</Project>
+    <ProjectReference Include="C:\Users\b9014614\CSC8503 2022\8503\OpenGLRendering\OpenGLRendering.vcxproj">
+      <Project>{FA23A365-19EB-3F20-BF84-E5816F904863}</Project>
       <Name>OpenGLRendering</Name>
     </ProjectReference>
   </ItemGroup>

@@ -1,195 +1,195 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Assets.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Assets.cpp">
       <Filter>Asset Handling</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\SimpleFont.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\SimpleFont.cpp">
       <Filter>Asset Handling</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\TextureLoader.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\TextureLoader.cpp">
       <Filter>Asset Handling</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\TextureWriter.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\TextureWriter.cpp">
       <Filter>Asset Handling</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Maths.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Maths.cpp">
       <Filter>Maths</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Matrix2.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Matrix2.cpp">
       <Filter>Maths</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Matrix3.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Matrix3.cpp">
       <Filter>Maths</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Matrix4.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Matrix4.cpp">
       <Filter>Maths</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Plane.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Plane.cpp">
       <Filter>Maths</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Quaternion.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Quaternion.cpp">
       <Filter>Maths</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Vector2.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Vector2.cpp">
       <Filter>Maths</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Vector3.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Vector3.cpp">
       <Filter>Maths</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Vector4.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Vector4.cpp">
       <Filter>Maths</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\MeshAnimation.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\MeshAnimation.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\MeshGeometry.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\MeshGeometry.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\MeshMaterial.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\MeshMaterial.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\RendererBase.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\RendererBase.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\ShaderBase.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\ShaderBase.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\TextureBase.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\TextureBase.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Camera.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\GameTimer.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\GameTimer.cpp">
       <Filter>Windowing and Input</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Keyboard.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Keyboard.cpp">
       <Filter>Windowing and Input</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Mouse.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Mouse.cpp">
       <Filter>Windowing and Input</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Window.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Window.cpp">
       <Filter>Windowing and Input</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Win32Keyboard.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Win32Keyboard.cpp">
       <Filter>Windowing and Input\Win32</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Win32Mouse.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Win32Mouse.cpp">
       <Filter>Windowing and Input\Win32</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Win32Window.cpp">
+    <ClCompile Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Win32Window.cpp">
       <Filter>Windowing and Input\Win32</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Assets.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Assets.h">
       <Filter>Asset Handling</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\SimpleFont.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\SimpleFont.h">
       <Filter>Asset Handling</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\TextureLoader.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\TextureLoader.h">
       <Filter>Asset Handling</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\TextureWriter.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\TextureWriter.h">
       <Filter>Asset Handling</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Camera.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Maths.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Maths.h">
       <Filter>Maths</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Matrix2.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Matrix2.h">
       <Filter>Maths</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Matrix3.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Matrix3.h">
       <Filter>Maths</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Matrix4.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Matrix4.h">
       <Filter>Maths</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Plane.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Plane.h">
       <Filter>Maths</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Quaternion.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Quaternion.h">
       <Filter>Maths</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Vector2.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Vector2.h">
       <Filter>Maths</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Vector3.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Vector3.h">
       <Filter>Maths</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Vector4.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Vector4.h">
       <Filter>Maths</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\MeshAnimation.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\MeshAnimation.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\MeshGeometry.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\MeshGeometry.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\MeshMaterial.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\MeshMaterial.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\RendererBase.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\RendererBase.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\ShaderBase.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\ShaderBase.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\TextureBase.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\TextureBase.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\GameTimer.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\GameTimer.h">
       <Filter>Windowing and Input</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Keyboard.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Keyboard.h">
       <Filter>Windowing and Input</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Mouse.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Mouse.h">
       <Filter>Windowing and Input</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Window.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Window.h">
       <Filter>Windowing and Input</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Win32Keyboard.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Win32Keyboard.h">
       <Filter>Windowing and Input\Win32</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Win32Mouse.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Win32Mouse.h">
       <Filter>Windowing and Input\Win32</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\Win32Window.h">
+    <ClInclude Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\Win32Window.h">
       <Filter>Windowing and Input\Win32</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\tomos\source\repos\tomosh22\CSC8503\NCLCoreClasses\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\b9014614\CSC8503 2022\8503\NCLCoreClasses\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Asset Handling">
-      <UniqueIdentifier>{D2BE877A-C70F-3BC1-BD30-0DE2C7475B96}</UniqueIdentifier>
+      <UniqueIdentifier>{B5BA0633-45E1-300F-985E-6275E3CE36C4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{21955DA5-9F23-32F9-BFA8-C53211C6487F}</UniqueIdentifier>
+      <UniqueIdentifier>{133FF0FE-F605-331C-8EAF-6F97965CA098}</UniqueIdentifier>
     </Filter>
     <Filter Include="Maths">
-      <UniqueIdentifier>{A2A507D3-BDBF-3063-B38F-6488A8B6228D}</UniqueIdentifier>
+      <UniqueIdentifier>{9580D666-1929-3FDC-9FC6-4E2987D5EEB8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Rendering">
-      <UniqueIdentifier>{869ADBA5-E94B-3F85-B2DD-E9608AAD9D28}</UniqueIdentifier>
+      <UniqueIdentifier>{F60C2556-548F-3673-86C1-F789E814BBF7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{B03E9F04-4906-3D47-8F1F-4453378B4366}</UniqueIdentifier>
+      <UniqueIdentifier>{6CC23769-D693-3810-AEDA-E3E40D4F3C04}</UniqueIdentifier>
     </Filter>
     <Filter Include="Windowing and Input">
-      <UniqueIdentifier>{B7CD4F15-752D-33C8-B043-FE6007BC1B76}</UniqueIdentifier>
+      <UniqueIdentifier>{D9F52458-5742-3ABE-A8C2-BD06376DECD2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Windowing and Input\Win32">
-      <UniqueIdentifier>{20A514CF-9516-3566-8CFD-3099414D5232}</UniqueIdentifier>
+      <UniqueIdentifier>{8ADA3C83-DC69-3297-A50D-B6B3DEDBB59F}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
