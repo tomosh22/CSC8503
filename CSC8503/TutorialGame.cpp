@@ -295,13 +295,14 @@ void TutorialGame::InitWorld() {
 
 	InitMixedGridWorld(15, 15, 3.5f, 3.5f);
 	
-	AddOBBToWorld(Vector3(-25,0,-10),Vector3(5,5,5));
-	AddOBBToWorld(Vector3(-5,0,-20), Vector3(5, 5, 5));
+	AddOBBToWorld(Vector3(-25,0,-30),Vector3(5,5,5));
+	AddOBBToWorld(Vector3(-25,0,-10), Vector3(5, 5, 5));
 
 	InitGameExamples();
 	InitDefaultFloor();
 
 	BridgeConstraintTest();
+	HingeTest();
 }
 
 /*
@@ -546,6 +547,20 @@ void TutorialGame::BridgeConstraintTest() {
 	}
 	PositionConstraint* constraint = new PositionConstraint(prev, end, maxDistance);
 	world->AddConstraint(constraint);
+}
+
+void TutorialGame::HingeTest() {
+	Vector3 doorSize = Vector3(3, 2, 3);
+	Vector3 doorPos = Vector3(-50, 50, -50);
+	GameObject* door = AddOBBToWorld(doorPos, doorSize, 5);
+
+	GameObject* hinge = AddCubeToWorld(doorPos - Vector3(5, 1, 0), Vector3(1, 1, 1), 0);
+	
+	OrientationConstraint* constraint1 = new OrientationConstraint(door, hinge, Vector3(0, 1, 0));
+	world->AddConstraint(constraint1);
+
+	PositionConstraint* constraint3 = new PositionConstraint(door, hinge,10);
+	world->AddConstraint(constraint3);
 }
 
 /*

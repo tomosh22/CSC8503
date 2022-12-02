@@ -380,7 +380,7 @@ bool CollisionDetection::SAT(const Vector3 delta, const Vector3 plane, const Tra
 		fabs(Vector3::Dot(BUp * halfSizeB.y, plane)) +
 		fabs(Vector3::Dot(BForward * halfSizeB.z, plane));
 
-	bool result = deltaPlaneDot < rest;
+	bool result = deltaPlaneDot <= rest;
 	if (result) {
 		float delta = rest - deltaPlaneDot;
 		penDistance = delta < penDistance ? delta : penDistance;

@@ -1,5 +1,6 @@
 #pragma once
 #include "Constraint.h"
+using namespace NCL::Maths;
 
 namespace NCL {
 	namespace CSC8503 {
@@ -17,6 +18,7 @@ namespace NCL {
 			GameObject* objectB;
 
 			float distance;
+			Vector3 axis;
 		};
 	}
 }

@@ -15,6 +15,7 @@ PositionConstraint::PositionConstraint(GameObject* a, GameObject* b, float d)
 	objectA		= a;
 	objectB		= b;
 	distance	= d;
+	this->axis = axis;
 }
 
 PositionConstraint::~PositionConstraint()

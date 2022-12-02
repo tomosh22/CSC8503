@@ -1,5 +1,6 @@
 #pragma once
 #include "Constraint.h"
+using namespace NCL::Maths;
 
 namespace NCL {
 	namespace CSC8503 {
@@ -8,7 +9,7 @@ namespace NCL {
 		class OrientationConstraint : public Constraint
 		{
 		public:
-			OrientationConstraint(GameObject* a, GameObject* b);
+			OrientationConstraint(GameObject* a, GameObject* b,Vector3 angle);
 			~OrientationConstraint();
 
 			void UpdateConstraint(float dt) override;
@@ -17,7 +18,7 @@ namespace NCL {
 			GameObject* objectA;
 			GameObject* objectB;
 
-			float distance;
+			Vector3 angle;
 		};
 	}
 }
