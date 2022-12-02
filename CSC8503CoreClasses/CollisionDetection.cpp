@@ -303,6 +303,25 @@ bool CollisionDetection::AABBSphereIntersection(const AABBVolume& volumeA, const
 
 bool  CollisionDetection::OBBSphereIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
 	const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
+
+	Vector3 deltaPos = worldTransformB.GetPosition() - worldTransformA.GetPosition();
+
+	Transform tempTransform;
+	tempTransform.SetOrientation(worldTransformA.GetOrientation().Conjugate());
+	tempTransform.SetPosition(deltaPos);
+
+	
+
+	AABBVolume tempAABB(volumeA.GetHalfDimensions());
+	Transform blankTransform;
+	blankTransform.SetPosition(Vector3());
+
+	if (AABBSphereIntersection(tempAABB, blankTransform, volumeB, tempTransform, collisionInfo)) {
+		collisionInfo.point.normal = worldTransformA.GetOrientation() * collisionInfo.point.normal;
+		collisionInfo.point.localA = collisionInfo.point.localA + deltaPos;
+		collisionInfo.point.localB = collisionInfo.point.localB + deltaPos;
+		return true;
+	}
 	return false;
 }
 

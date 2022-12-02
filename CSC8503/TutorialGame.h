@@ -16,6 +16,11 @@ namespace NCL {
 
 			virtual void UpdateGame(float dt);
 
+
+
+			float camDistance;
+			Vector3 lookAt;
+
 		protected:
 			void InitialiseAssets();
 

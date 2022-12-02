@@ -8,6 +8,9 @@
 #include "OrientationConstraint.h"
 #include "StateGameObject.h"
 
+#include <Xinput.h>
+#pragma comment(lib, "Xinput.lib")
+#pragma comment(lib, "Xinput9_1_0.lib")
 
 
 using namespace NCL;
@@ -75,9 +78,14 @@ void TutorialGame::UpdateGame(float dt) {
 	}
 	if (lockedObject != nullptr) {
 		Vector3 objPos = lockedObject->GetTransform().GetPosition();
-		Vector3 camPos = objPos + lockedOffset;
+		Vector3 camPos = objPos + lockedObject->GetTransform().GetOrientation() * Vector3(0,0,1) * 5 + lockedObject->GetTransform().GetOrientation() * Vector3(0, 1, 0) * 2;
 
-		Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0,1,0));
+		lookAt = Vector3(0, 0, 0);
+		camDistance = 10;
+		Vector3 lookDir = (objPos - lookAt).Normalised();
+		camPos = objPos + lookDir * camDistance + lockedObject->GetTransform().GetOrientation() * Vector3(0, 1, 0) * 2;
+
+		Matrix4 temp = Matrix4::BuildViewMatrix(camPos, Vector3(0,0,0), Vector3(0,1,0));
 
 		Matrix4 modelMat = temp.Inverse();
 
@@ -188,16 +196,50 @@ void TutorialGame::LockedObjectMovement() {
 
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
-		selectionObject->GetPhysicsObject()->AddForce(fwdAxis);
+		selectionObject->GetPhysicsObject()->AddForce(fwdAxis*10);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
 		selectionObject->GetPhysicsObject()->AddForce(-fwdAxis);
 	}
-
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NEXT)) {
-		selectionObject->GetPhysicsObject()->AddForce(Vector3(0,-10,0));
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
+		selectionObject->GetPhysicsObject()->AddTorque(Vector3(0,-1,0));
 	}
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
+		selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, 1, 0));
+	}
+
+	Quaternion localRotation = selectionObject->GetTransform().GetOrientation();
+	Vector3 localUp = localRotation * Vector3(0, 1, 0);
+	Vector3 localForward = localRotation * Vector3(0, 0, -1);
+	Vector3 localRight = localRotation * Vector3(1, 0, 0);
+
+	XINPUT_STATE state;
+	ZeroMemory(&state, sizeof(XINPUT_STATE));
+	XInputGetState(0, &state);
+
+	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_A)selectionObject->GetPhysicsObject()->ApplyLinearImpulse(localUp);
+	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER)selectionObject->GetPhysicsObject()->AddForce(localForward * 50);
+	float leftTrigger = state.Gamepad.bLeftTrigger;
+	float leftRight = state.Gamepad.bRightTrigger;
+
+	float leftStickX = state.Gamepad.sThumbLX;
+	if (leftStickX > 32767)leftStickX = 32767;
+	if (leftStickX < -32767)leftStickX = -32767;
+
+	float leftStickY = state.Gamepad.sThumbLY;
+	if (leftStickY > 32767)leftStickY = 32767;
+	if (leftStickY < -32767)leftStickY = -32767;
+
+	
+	if(std::fabs(leftStickX) > 1000)selectionObject->GetPhysicsObject()->AddTorque(localUp * 2 * -leftStickX/32767);
+	if (std::fabs(leftStickY) > 1000)selectionObject->GetPhysicsObject()->AddTorque(localRight * 2 * -leftStickY/32767);
+	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_B)selectionObject->GetPhysicsObject()->AddTorque(-localForward);
+	/*Debug::DrawLine(selectionObject->GetTransform().GetPosition() - Vector3(0, 0, 1), selectionObject->GetTransform().GetPosition() + Vector3(0, 0, 1));
+	Debug::DrawLine(selectionObject->GetTransform().GetPosition() - Vector3(0, 1, 0), selectionObject->GetTransform().GetPosition() + Vector3(0, 1, 0));
+	Debug::DrawLine(selectionObject->GetTransform().GetPosition() - Vector3(1, 0, 0), selectionObject->GetTransform().GetPosition() + Vector3(1, 0, 0));*/
+	Debug::DrawLine(selectionObject->GetTransform().GetPosition(), selectionObject->GetTransform().GetPosition() + localForward);
+
 }
 
 void TutorialGame::DebugObjectMovement() {
@@ -254,7 +296,7 @@ void TutorialGame::InitWorld() {
 	InitMixedGridWorld(15, 15, 3.5f, 3.5f);
 	
 	AddOBBToWorld(Vector3(-25,0,-10),Vector3(5,5,5));
-	AddOBBToWorld(Vector3(-5,0,-20),Vector3(5,5,5));
+	AddSphereToWorld(Vector3(-5,0,-20),5);
 
 	InitGameExamples();
 	InitDefaultFloor();
@@ -367,6 +409,7 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 
 	GameObject* character = new GameObject();
 	SphereVolume* volume  = new SphereVolume(1.0f);
+	//OBBVolume* volume = new OBBVolume(Vector3(1, 1, 3));
 
 	character->SetBoundingVolume((CollisionVolume*)volume);
 
@@ -434,6 +477,8 @@ void TutorialGame::InitDefaultFloor() {
 }
 
 void TutorialGame::InitGameExamples() {
+	//lockedObject = AddPlayerToWorld(Vector3(0, 5, 0));
+	//selectionObject = lockedObject;
 	AddPlayerToWorld(Vector3(0, 5, 0));
 	AddEnemyToWorld(Vector3(5, 5, 0));
 	AddBonusToWorld(Vector3(10, 5, 0));
