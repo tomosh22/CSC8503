@@ -361,7 +361,17 @@ bool CollisionDetection::SphereCapsuleIntersection(
 	return false;
 }
 
-bool CollisionDetection::SAT(const Vector3 delta, const Vector3 plane, const Transform& worldTransformA, const Transform& worldTransformB, const Vector3 halfSizeA, const Vector3 halfSizeB, float& penDistance) {
+Vector3 CollisionDetection::OBBSupport(const Transform& worldTransform, Vector3 worldDir) {
+	Vector3 localDir = worldTransform.GetOrientation().Conjugate() * worldDir;
+	Vector3 vertex;
+	vertex.x = localDir.x < 0 ? -0.5f : 0.5f;
+	vertex.y = localDir.y < 0 ? -0.5f : 0.5f;
+	vertex.z = localDir.z < 0 ? -0.5f : 0.5f;
+	return (Matrix4::Scale(worldTransform.GetScale()) * worldTransform.GetOrientation() * Matrix4::Translation(vertex)).GetPositionVector();
+}
+
+bool CollisionDetection::SAT(const Vector3 delta, Vector3 plane, const Transform& worldTransformA, 
+	const Transform& worldTransformB, const Vector3 halfSizeA, const Vector3 halfSizeB, float& penDistance, Vector3& normal, Vector3& pointA,Vector3& pointB) {
 	//todo stop calculating these twice
 	Vector3 AForward = worldTransformA.GetOrientation() * Vector3(0, 0, 1);
 	Vector3 BForward = worldTransformB.GetOrientation() * Vector3(0, 0, 1);
@@ -382,12 +392,60 @@ bool CollisionDetection::SAT(const Vector3 delta, const Vector3 plane, const Tra
 
 	bool result = deltaPlaneDot <= rest;
 	if (result) {
-		float delta = rest - deltaPlaneDot;
-		penDistance = delta < penDistance ? delta : penDistance;
+		float delta2 = rest - deltaPlaneDot;
+		if (delta2 < penDistance && plane.LengthSquared() > 0.1) {
+			penDistance = delta2;
+			normal = plane;
+
+			if (Vector3::Dot(plane, delta) < 0) {
+				plane *= -1;
+			}
+
+			pointA = OBBSupport(worldTransformA,plane);
+			pointB = OBBSupport(worldTransformB, -plane);
+			std::cout << "hi\n";
+		}
 		return true;
 	}
 	return false;
 }
+
+
+
+//bool CollisionDetection::SAT(const Vector3 delta, const Vector3 plane, const Transform& worldTransformA,
+//	const Transform& worldTransformB, const Vector3 halfSizeA, const Vector3 halfSizeB, float& penDistance, Vector3& normal, Vector3& point) {
+//	
+//	Vector3 minA = worldTransformA.GetPosition() - plane * halfSizeA;
+//	Vector3 minB = worldTransformB.GetPosition() - plane * halfSizeB;
+//	Vector3 maxA = worldTransformA.GetPosition() + plane * halfSizeA;
+//	Vector3 maxB = worldTransformB.GetPosition() + plane * halfSizeB;
+//
+//	float A = Vector3::Dot(plane, minA);
+//	float B = Vector3::Dot(plane, maxA);
+//	float C = Vector3::Dot(plane, minB);
+//	float D = Vector3::Dot(plane, maxB);
+//
+//	if (A <= C && B >= C) {
+//		if (C - B < penDistance) {
+//			penDistance = C - B;
+//			normal = plane;
+//			point = maxA + normal * penDistance;
+//		}
+//		return true;
+//	}
+//
+//	if (C <= A && D >= A) {
+//		if (A - D < penDistance) {
+//			penDistance = A - D;
+//			normal = -plane;
+//			point = minA + normal * penDistance;
+//		}
+//		return true;
+//	}
+//	return false;
+//}
+
+
 
 bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
 	const OBBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
@@ -401,35 +459,36 @@ bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transfo
 
 	bool results[15] = { false };
 	float penDistance = FLT_MAX;
-	//faces
-	results[0] = SAT(deltaPos, ARight, worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions(),penDistance);
-	results[1] = SAT(deltaPos, AUp, worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions(), penDistance);
-	results[2] = SAT(deltaPos, AForward, worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions(), penDistance);
+	Vector3 normal;
+	Vector3 pointA;
+	Vector3 pointB;
+	Vector3 planes[15] = {
+		//faces
+		ARight,
+		AUp,
+		AForward,
+		BRight,
+		BUp,
+		BForward,
 
-	results[3] = SAT(deltaPos, BRight, worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions(), penDistance);
-	results[4] = SAT(deltaPos, BUp, worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions(), penDistance);
-	results[5] = SAT(deltaPos, BForward, worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions(), penDistance);
-
-
-	//edges
-	results[6] = SAT(deltaPos, Vector3::Cross(ARight, BRight), worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions(), penDistance);
-	results[7] = SAT(deltaPos, Vector3::Cross(ARight, BUp), worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions(), penDistance);
-	results[8] = SAT(deltaPos, Vector3::Cross(ARight, BForward), worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions(), penDistance);
-
-	results[9] = SAT(deltaPos, Vector3::Cross(AUp, BRight), worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions(), penDistance);
-	results[10] = SAT(deltaPos, Vector3::Cross(AUp, BUp), worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions(), penDistance);
-	results[11] = SAT(deltaPos, Vector3::Cross(AUp, BForward), worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions(), penDistance);
-
-	results[12] = SAT(deltaPos, Vector3::Cross(AForward, BRight), worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions(), penDistance);
-	results[13] = SAT(deltaPos, Vector3::Cross(AForward, BUp), worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions(), penDistance);
-	results[14] = SAT(deltaPos, Vector3::Cross(AForward, BForward), worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions(), penDistance);
-
+		//edges
+		Vector3::Cross(ARight, BRight),
+		Vector3::Cross(ARight, BUp),
+		Vector3::Cross(ARight, BForward),
+		Vector3::Cross(AUp, BRight),
+		Vector3::Cross(AUp, BUp),
+		Vector3::Cross(AUp, BForward),
+		Vector3::Cross(AForward, BRight),
+		Vector3::Cross(AForward, BUp),
+		Vector3::Cross(AForward, BForward)
+	};
 	for (int i = 0; i < 15; i++)
 	{
-		if (!results[i])return false;
+		if (!SAT(deltaPos, planes[i], worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions(), penDistance, normal,pointA,pointB))return false;
 	}
 	//todo calculate contact point properly
-	collisionInfo.AddContactPoint(deltaPos/2, -deltaPos/2, deltaPos.Normalised(), penDistance);
+	collisionInfo.AddContactPoint(pointA, pointB, normal, penDistance);
+	//std::cout << "collision\n";
 	return true;
 
 }
