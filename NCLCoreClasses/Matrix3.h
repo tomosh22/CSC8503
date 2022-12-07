@@ -45,7 +45,7 @@ namespace NCL::Maths {
 			Matrix3 m;
 
 			for (int i = 0; i < 3; ++i) {
-				for (int j = 0; j < 3; ++i) {
+				for (int j = 0; j < 3; ++j) {
 					m.array[i][j] = std::abs(array[i][j]);
 				}
 			}
