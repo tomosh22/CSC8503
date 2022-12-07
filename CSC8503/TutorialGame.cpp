@@ -301,8 +301,8 @@ void TutorialGame::InitWorld() {
 	InitGameExamples();
 	InitDefaultFloor();
 
-	BridgeConstraintTest();
-	HingeTest();
+	//BridgeConstraintTest();
+	//HingeTest();
 }
 
 /*
@@ -394,6 +394,7 @@ GameObject* TutorialGame::AddOBBToWorld(const Vector3& position, Vector3 dimensi
 	cube->GetTransform()
 		.SetPosition(position)
 		.SetScale(dimensions * 2);
+		//.SetOrientation(Quaternion::EulerAnglesToQuaternion(20,20,20));
 
 	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
 	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));

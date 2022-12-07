@@ -23,7 +23,7 @@ namespace NCL {
 			Vector3 localA;
 			Vector3 localB;
 			Vector3 normal;
-			float	penetration;
+			float	penetration = 0;
 		};
 		struct CollisionInfo {
 			GameObject* a;
@@ -32,15 +32,38 @@ namespace NCL {
 
 			ContactPoint point;
 
+			ContactPoint point2;
+			ContactPoint point3;
+			ContactPoint point4;
+			int numPoints = 1;
+
 			CollisionInfo() {
 
 			}
 
-			void AddContactPoint(const Vector3& localA, const Vector3& localB, const Vector3& normal, float p) {
-				point.localA		= localA;
-				point.localB		= localB;
-				point.normal		= normal;
-				point.penetration	= p;
+			void AddContactPoint(const Vector3& localA, const Vector3& localB, const Vector3& normal, float p,bool useManifold) {
+				if (!useManifold) {
+					point.localA = localA;
+					point.localB = localB;
+					point.normal = normal;
+					point.penetration = p;
+				}
+				else {
+					if (numPoints % 4 == 1)CollisionDetection::ContactPoint& tempPoint = point;
+					else if (numPoints % 4 == 2)CollisionDetection::ContactPoint& tempPoint = point2;
+					else if (numPoints % 4 == 3)CollisionDetection::ContactPoint& tempPoint = point3;
+					else if (numPoints % 4 == 0)CollisionDetection::ContactPoint& tempPoint = point4;
+					numPoints++;
+					point.localA = localA;
+					point.localB = localB;
+					point.normal = normal;
+					point.penetration = p;
+				}
+				
+
+				
+				
+
 			}
 
 			//Advanced collision detection / resolution

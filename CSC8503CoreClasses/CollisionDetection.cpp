@@ -262,7 +262,7 @@ bool CollisionDetection::AABBIntersection(const AABBVolume& volumeA, const Trans
 				bestAxis = faces[i];
 			}
 		}
-		collisionInfo.AddContactPoint(Vector3(), Vector3(), bestAxis, pen);
+		collisionInfo.AddContactPoint(Vector3(), Vector3(), bestAxis, pen,false);
 		return true;
 	}
 	return false;
@@ -281,7 +281,7 @@ bool CollisionDetection::SphereIntersection(const SphereVolume& volumeA, const T
 		Vector3 normal = delta.Normalised();
 		Vector3 localA = normal * volumeA.GetRadius();
 		Vector3 localB = -normal * volumeB.GetRadius();
-		collisionInfo.AddContactPoint(localA, localB,normal, pen);
+		collisionInfo.AddContactPoint(localA, localB,normal, pen,false);
 		return true;
 	}
 
@@ -304,7 +304,7 @@ bool CollisionDetection::AABBSphereIntersection(const AABBVolume& volumeA, const
 		Vector3 localA = Vector3();
 		Vector3 localB = -collisionNormal * volumeB.GetRadius();
 
-		collisionInfo.AddContactPoint(localA, localB, collisionNormal, pen);
+		collisionInfo.AddContactPoint(localA, localB, collisionNormal, pen,false);
 		return true;
 	}
 
@@ -403,7 +403,6 @@ bool CollisionDetection::SAT(const Vector3 delta, Vector3 plane, const Transform
 
 			pointA = OBBSupport(worldTransformA,plane);
 			pointB = OBBSupport(worldTransformB, -plane);
-			std::cout << "hi\n";
 		}
 		return true;
 	}
@@ -487,7 +486,7 @@ bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transfo
 		if (!SAT(deltaPos, planes[i], worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions(), penDistance, normal,pointA,pointB))return false;
 	}
 	//todo calculate contact point properly
-	collisionInfo.AddContactPoint(pointA, pointB, normal, penDistance);
+	collisionInfo.AddContactPoint(pointA, pointB, normal, penDistance,true);
 	//std::cout << "collision\n";
 	return true;
 

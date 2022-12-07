@@ -206,7 +206,29 @@ void PhysicsSystem::BasicCollisionDetection() {
 			CollisionDetection::CollisionInfo info;
 			if (CollisionDetection::ObjectIntersection(*i, *j, info)) {
 				//std::cout << "collision between " << (*i)->GetName() << "and " << (*j)->GetName() << '\n';
-				ImpulseResolveCollision(*info.a, *info.b, info.point);
+				
+				CollisionDetection::ContactPoint point;
+				for (int i = 1; i <= info.numPoints; i++)
+				{
+					CollisionDetection::ContactPoint tempPoint;
+					if (i == 1)tempPoint = info.point;
+					else if (i == 2)tempPoint = info.point2;
+					else if (i == 3)tempPoint = info.point3;
+					else if (i == 4)tempPoint = info.point4;
+					point.localA += tempPoint.localA;
+					point.localB += tempPoint.localB;
+					point.normal += tempPoint.normal;
+					point.penetration += tempPoint.penetration;
+				}
+				point.localA /= info.numPoints;
+				point.localB /= info.numPoints;
+				point.normal /= info.numPoints;
+				point.penetration /= info.numPoints;
+
+				
+				ImpulseResolveCollision(*info.a, *info.b, point);
+				
+				
 				info.framesLeft = numCollisionFrames;
 				allCollisions.insert(info);
 			}
