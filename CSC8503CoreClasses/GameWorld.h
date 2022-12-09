@@ -22,7 +22,7 @@ namespace NCL {
 			void Clear();
 			void ClearAndErase();
 
-			void AddGameObject(GameObject* o);
+			void AddGameObject(GameObject* o, int worldID = -1);
 			void RemoveGameObject(GameObject* o, bool andDelete = false);
 
 			void AddConstraint(Constraint* c);

@@ -12,6 +12,8 @@
 using namespace NCL;
 using namespace CSC8503;
 
+//#define PHYSICS_DEBUG	
+
 PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{
 	applyGravity	= false;
 	useBroadPhase	= false;	
@@ -125,7 +127,9 @@ void PhysicsSystem::Update(float dt) {
 	if (updateTime > realDT) {
 		realHZ /= 2;
 		realDT *= 2;
+#ifdef PHYSICS_DEBUG
 		std::cout << "Dropping iteration count due to long physics time...(now " << realHZ << ")\n";
+#endif
 	}
 	else if(dt*2 < realDT) { //we have plenty of room to increase iteration count!
 		int temp = realHZ;
@@ -137,7 +141,9 @@ void PhysicsSystem::Update(float dt) {
 			realDT = idealDT;
 		}
 		if (temp != realHZ) {
+#ifdef PHYSICS_DEBUG
 			std::cout << "Raising iteration count due to short physics time...(now " << realHZ << ")\n";
+#endif
 		}
 	}
 }
@@ -225,8 +231,12 @@ void PhysicsSystem::BasicCollisionDetection() {
 				point.normal /= info.numPoints;
 				point.penetration /= info.numPoints;
 
-				
-				ImpulseResolveCollision(*info.a, *info.b, point);
+				//if(*info.a->GetPhysicsObject()->GetCollisionVolume()->type == )
+				NCL::VolumeType typeA = info.a->GetPhysicsObject()->GetCollisionVolume()->type;
+				NCL::VolumeType typeB = info.b->GetPhysicsObject()->GetCollisionVolume()->type;
+				if (typeA == typeB && typeA == NCL::VolumeType::OBB)ProjectionResolveCollision(*info.a, *info.b, point);
+				else if (typeA == typeB && typeA == NCL::VolumeType::Sphere)PenaltyResolveCollision(*info.a, *info.b, point);
+				else	ImpulseResolveCollision(*info.a, *info.b, point);
 				
 				
 				info.framesLeft = numCollisionFrames;
@@ -236,6 +246,35 @@ void PhysicsSystem::BasicCollisionDetection() {
 		}
 	}
 }
+
+void PhysicsSystem::PenaltyResolveCollision(GameObject& a, GameObject& b, CollisionDetection::ContactPoint& p) const {
+	PhysicsObject* physA = a.GetPhysicsObject();
+	PhysicsObject* physB = b.GetPhysicsObject();
+
+	Vector3 totalVel = physB->GetLinearVelocity() + Vector3::Cross(physB->GetAngularVelocity(), p.localB) - physA->GetLinearVelocity() + Vector3::Cross(physA->GetAngularVelocity(), p.localA);
+
+	Vector3 direction = p.normal * p.penetration;
+
+	physA->AddForce(-direction * 5);
+	physB->AddForce(direction * 5);
+	
+	std::cout << "collided " + std::to_string(p.penetration) + '\n';
+
+}
+
+void PhysicsSystem::ProjectionResolveCollision(GameObject& a, GameObject& b, CollisionDetection::ContactPoint& p) const {
+	PhysicsObject* physA = a.GetPhysicsObject();
+	PhysicsObject* physB = b.GetPhysicsObject();
+	Transform& transformA = a.GetTransform();
+	Transform& transformB = b.GetTransform();
+
+	float totalMass = physA->GetInverseMass() + physB->GetInverseMass();
+	if (totalMass == 0)return;
+
+	transformA.SetPosition(transformA.GetPosition() - p.normal * p.penetration * physA->GetInverseMass() / totalMass);
+	transformB.SetPosition(transformB.GetPosition() + p.normal * p.penetration * physB->GetInverseMass() / totalMass);
+}
+
 
 /*
 
@@ -370,6 +409,9 @@ void PhysicsSystem::IntegrateAccel(float dt) {
 
 		angVel += angAccel * dt;
 		object->SetAngularVelocity(angVel);
+		/*if ((*i)->GetWorldID() == 999) {
+			std::cout << "processing player torque\n";
+		}*/
 	}
 }
 
@@ -404,9 +446,14 @@ void PhysicsSystem::IntegrateVelocity(float dt) {
 		orientation.Normalise();
 		transform.SetOrientation(orientation);
 
+		
+
 		float frameAngularDamping = 1 - 0.4 * dt;
 		angVel *= frameAngularDamping;
 		object->SetAngularVelocity(angVel);
+		/*if ((*i)->GetWorldID() == 999) {
+			std::cout << "processing player angvel\n";
+		}*/
 	}
 }
 

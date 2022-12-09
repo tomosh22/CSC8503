@@ -16,7 +16,7 @@
 using namespace NCL;
 using namespace CSC8503;
 
-
+//#define LOCKED_CAMERA
 
 TutorialGame::TutorialGame()	{
 	world		= new GameWorld();
@@ -33,6 +33,7 @@ TutorialGame::TutorialGame()	{
 	inSelectionMode = false;
 
 	InitialiseAssets();
+	srand(time(0));
 }
 
 /*
@@ -78,14 +79,12 @@ void TutorialGame::UpdateGame(float dt) {
 	}
 	if (lockedObject != nullptr) {
 		Vector3 objPos = lockedObject->GetTransform().GetPosition();
+
 		Vector3 camPos = objPos + lockedObject->GetTransform().GetOrientation() * Vector3(0,0,1) * 5 + lockedObject->GetTransform().GetOrientation() * Vector3(0, 1, 0) * 2;
 
-		lookAt = Vector3(0, 0, 0);
-		camDistance = 10;
-		Vector3 lookDir = (objPos - lookAt).Normalised();
-		camPos = objPos + lookDir * camDistance + lockedObject->GetTransform().GetOrientation() * Vector3(0, 1, 0) * 2;
+		lookAt = objPos + lockedObject->GetTransform().GetOrientation() * Vector3(0, 0, -1) + lockedObject->GetTransform().GetOrientation() * Vector3(0, 1, 0);
 
-		Matrix4 temp = Matrix4::BuildViewMatrix(camPos, Vector3(0,0,0), Vector3(0,1,0));
+		Matrix4 temp = Matrix4::BuildViewMatrix(camPos, lookAt, Vector3(0,1,0));
 
 		Matrix4 modelMat = temp.Inverse();
 
@@ -138,12 +137,16 @@ void TutorialGame::UpdateGame(float dt) {
 
 	renderer->Render();
 	Debug::UpdateRenderables(dt);
+
+
+	if (testStateObject)testStateObject->Update(dt);
 }
 
 void TutorialGame::UpdateKeys() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
-		InitWorld(); //We can reset the simulation at any time with F1
 		selectionObject = nullptr;
+		InitWorld(); //We can reset the simulation at any time with F1
+		
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
@@ -233,12 +236,14 @@ void TutorialGame::LockedObjectMovement() {
 
 	
 	if(std::fabs(leftStickX) > 1000)selectionObject->GetPhysicsObject()->AddTorque(localUp * 2 * -leftStickX/32767);
+	return;
+
 	if (std::fabs(leftStickY) > 1000)selectionObject->GetPhysicsObject()->AddTorque(localRight * 2 * -leftStickY/32767);
 	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_B)selectionObject->GetPhysicsObject()->AddTorque(-localForward);
 	/*Debug::DrawLine(selectionObject->GetTransform().GetPosition() - Vector3(0, 0, 1), selectionObject->GetTransform().GetPosition() + Vector3(0, 0, 1));
 	Debug::DrawLine(selectionObject->GetTransform().GetPosition() - Vector3(0, 1, 0), selectionObject->GetTransform().GetPosition() + Vector3(0, 1, 0));
 	Debug::DrawLine(selectionObject->GetTransform().GetPosition() - Vector3(1, 0, 0), selectionObject->GetTransform().GetPosition() + Vector3(1, 0, 0));*/
-	Debug::DrawLine(selectionObject->GetTransform().GetPosition(), selectionObject->GetTransform().GetPosition() + localForward);
+	Debug::DrawLine(selectionObject->GetTransform().GetPosition() - localForward, selectionObject->GetTransform().GetPosition() + localForward);
 
 }
 
@@ -298,11 +303,16 @@ void TutorialGame::InitWorld() {
 	AddOBBToWorld(Vector3(-25,0,-30),Vector3(1,1,1)*5);
 	AddOBBToWorld(Vector3(-25,0,-10), Vector3(1, 1, 1)*5);
 
+	AddSphereToWorld(Vector3(-45, 0, -30), 5);
+	AddSphereToWorld(Vector3(-45, 0, -10), 5);
+
 	InitGameExamples();
 	InitDefaultFloor();
 
 	//BridgeConstraintTest();
 	//HingeTest();
+
+	testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
 }
 
 /*
@@ -427,7 +437,9 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
 	character->GetPhysicsObject()->InitSphereInertia();
 
-	world->AddGameObject(character);
+	character->SetWorldID(999);
+
+	world->AddGameObject(character,999);
 
 	return character;
 }
@@ -476,14 +488,37 @@ GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 	return apple;
 }
 
+StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position) {
+	StateGameObject* apple = new StateGameObject();
+
+	SphereVolume* volume = new SphereVolume(0.5f);
+	apple->SetBoundingVolume((CollisionVolume*)volume);
+	apple->GetTransform()
+		.SetScale(Vector3(2, 2, 2))
+		.SetPosition(position);
+
+	apple->SetRenderObject(new RenderObject(&apple->GetTransform(), sphereMesh, nullptr, basicShader));
+	apple->SetPhysicsObject(new PhysicsObject(&apple->GetTransform(), apple->GetBoundingVolume()));
+
+	apple->GetPhysicsObject()->SetInverseMass(1.0f);
+	apple->GetPhysicsObject()->InitSphereInertia();
+
+	world->AddGameObject(apple);
+
+	return apple;
+}
+
 void TutorialGame::InitDefaultFloor() {
 	AddFloorToWorld(Vector3(0, -20, 0));
 }
 
 void TutorialGame::InitGameExamples() {
-	//lockedObject = AddPlayerToWorld(Vector3(0, 5, 0));
-	//selectionObject = lockedObject;
+#ifdef LOCKED_CAMERA
+	lockedObject = AddPlayerToWorld(Vector3(0, 5, 0));
+	selectionObject = lockedObject;
+#else
 	AddPlayerToWorld(Vector3(0, 5, 0));
+#endif
 	AddEnemyToWorld(Vector3(5, 5, 0));
 	AddBonusToWorld(Vector3(10, 5, 0));
 }

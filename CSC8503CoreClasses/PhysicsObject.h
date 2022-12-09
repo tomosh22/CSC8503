@@ -65,6 +65,10 @@ namespace NCL {
 				return inverseInteriaTensor;
 			}
 
+			CollisionVolume* GetCollisionVolume() const {
+				return const_cast<CollisionVolume*>(volume);
+			}
+
 		protected:
 			const CollisionVolume* volume;
 			Transform*		transform;

@@ -37,9 +37,9 @@ void GameWorld::ClearAndErase() {
 	Clear();
 }
 
-void GameWorld::AddGameObject(GameObject* o) {
+void GameWorld::AddGameObject(GameObject* o, int worldID) {
 	gameObjects.emplace_back(o);
-	o->SetWorldID(worldIDCounter++);
+	if(worldID == -1)o->SetWorldID(worldIDCounter++);
 	worldStateCounter++;
 }
 
