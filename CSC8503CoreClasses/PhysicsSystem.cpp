@@ -231,13 +231,12 @@ void PhysicsSystem::BasicCollisionDetection() {
 				point.normal /= info.numPoints;
 				point.penetration /= info.numPoints;
 
-				//if(*info.a->GetPhysicsObject()->GetCollisionVolume()->type == )
+				
 				NCL::VolumeType typeA = info.a->GetPhysicsObject()->GetCollisionVolume()->type;
 				NCL::VolumeType typeB = info.b->GetPhysicsObject()->GetCollisionVolume()->type;
-				if (typeA == typeB && typeA == NCL::VolumeType::OBB)ProjectionResolveCollision(*info.a, *info.b, point);
-				else if (typeA == typeB && typeA == NCL::VolumeType::Sphere)PenaltyResolveCollision(*info.a, *info.b, point);
-				else	ImpulseResolveCollision(*info.a, *info.b, point);
-				
+				//if (typeA == typeB && typeA == NCL::VolumeType::Sphere)ProjectionResolveCollision(*info.a, *info.b, point);
+				//else	ImpulseResolveCollision(*info.a, *info.b, point);
+				ImpulseResolveCollision(*info.a, *info.b, point);
 				
 				info.framesLeft = numCollisionFrames;
 				allCollisions.insert(info);
@@ -251,7 +250,7 @@ void PhysicsSystem::PenaltyResolveCollision(GameObject& a, GameObject& b, Collis
 	PhysicsObject* physA = a.GetPhysicsObject();
 	PhysicsObject* physB = b.GetPhysicsObject();
 
-	Vector3 totalVel = physB->GetLinearVelocity() + Vector3::Cross(physB->GetAngularVelocity(), p.localB) - physA->GetLinearVelocity() + Vector3::Cross(physA->GetAngularVelocity(), p.localA);
+	//Vector3 totalVel = physB->GetLinearVelocity() + Vector3::Cross(physB->GetAngularVelocity(), p.localB) - physA->GetLinearVelocity() + Vector3::Cross(physA->GetAngularVelocity(), p.localA);
 
 	Vector3 direction = p.normal * p.penetration;
 

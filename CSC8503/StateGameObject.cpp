@@ -1,8 +1,5 @@
 #include "StateGameObject.h"
-#include "StateTransition.h"
-#include "StateMachine.h"
-#include "State.h"
-#include "PhysicsObject.h"
+
 
 using namespace NCL;
 using namespace CSC8503;

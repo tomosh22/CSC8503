@@ -13,10 +13,73 @@
 #pragma comment(lib, "Xinput9_1_0.lib")
 
 
+#include <fstream>
+
 using namespace NCL;
 using namespace CSC8503;
 
 //#define LOCKED_CAMERA
+
+#pragma region PathfindingObject
+PathfindingObject::PathfindingObject(NavigationGrid* grid, Vector3 startPos, Vector3 endPos,GameObject* player,GameWorld* world) {
+	
+	stateMachine = new StateMachine();
+	grid->FindPath(startPos, endPos, path);
+	path.PopWaypoint(dest);
+	time = 0;
+	this->player = player;
+	this->world = world;
+
+	State* movingForward = new State(
+		[&](float dt)->void {
+			
+			Vector3 position = GetTransform().GetPosition();
+			if ((position - dest).Length() < 5) {
+				finished = path.PopWaypoint(dest);
+			}
+			GetPhysicsObject()->AddForce((this->dest - position));
+			time += dt;
+		}
+	);
+	State* chasingPlayer = new State(
+		[&](float dt)->void {
+			Vector3 position = GetTransform().GetPosition();
+			GetPhysicsObject()->AddForce(this->player->GetTransform().GetPosition() - position);
+
+		}
+	);
+	stateMachine->AddState(movingForward);
+	stateMachine->AddState(chasingPlayer);
+
+	stateMachine->AddTransition(new StateTransition(movingForward, chasingPlayer, [&]()->bool {return CanSeePlayer(); }));
+	stateMachine->AddTransition(new StateTransition(chasingPlayer, movingForward, [&]()->bool {return !CanSeePlayer(); }));
+
+}
+
+void PathfindingObject::Update(float dt) {
+	stateMachine->Update(dt);
+	std::cout << CanSeePlayer();
+}
+
+bool PathfindingObject::CanSeePlayer() {
+	Vector3 dirToPlayer = player->GetTransform().GetPosition() - GetTransform().GetPosition();
+	dirToPlayer.Normalise();
+	Ray ray(GetTransform().GetPosition(),dirToPlayer);
+	RayCollision closestCollision;
+	if (world->Raycast(ray, closestCollision, true,this)) {
+		if (closestCollision.node == player) {
+			return true;
+		}
+		else return false;
+	}
+
+
+}
+
+#pragma endregion
+
+
+#pragma region TutorialGame
 
 TutorialGame::TutorialGame()	{
 	world		= new GameWorld();
@@ -94,6 +157,9 @@ void TutorialGame::UpdateGame(float dt) {
 		world->GetMainCamera()->SetPosition(camPos);
 		world->GetMainCamera()->SetPitch(angles.x);
 		world->GetMainCamera()->SetYaw(angles.y);
+
+
+		
 	}
 
 	UpdateKeys();
@@ -140,6 +206,7 @@ void TutorialGame::UpdateGame(float dt) {
 
 
 	if (testStateObject)testStateObject->Update(dt);
+	if (pathfinder)pathfinder->Update(dt);
 }
 
 void TutorialGame::UpdateKeys() {
@@ -147,6 +214,12 @@ void TutorialGame::UpdateKeys() {
 		selectionObject = nullptr;
 		InitWorld(); //We can reset the simulation at any time with F1
 		
+	}
+
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::M)) {
+		selectionObject = nullptr;
+		InitMaze(); //We can reset the simulation at any time with F1
+
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
@@ -294,25 +367,63 @@ void TutorialGame::InitCamera() {
 	lockedObject = nullptr;
 }
 
+void TutorialGame::InitMaze() {
+	world->ClearAndErase();
+	physics->Clear();
+	InitDefaultFloor();
+	AddMazeToWorld();
+	player = AddPlayerToWorld(Vector3(80,0,45));
+	pathfinder = AddPathfindingObjectToWorld();
+}
+
 void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 
-	InitMixedGridWorld(15, 15, 3.5f, 3.5f);
+	//InitMixedGridWorld(15, 15, 3.5f, 3.5f);
 	
-	AddOBBToWorld(Vector3(-25,0,-30),Vector3(1,1,1)*5);
-	AddOBBToWorld(Vector3(-25,0,-10), Vector3(1, 1, 1)*5);
+	//AddOBBToWorld(Vector3(-25,0,-30),Vector3(1,1,1)*5);
+	//AddOBBToWorld(Vector3(-25,0,-10), Vector3(1, 1, 1)*5);
 
-	AddSphereToWorld(Vector3(-45, 0, -30), 5);
-	AddSphereToWorld(Vector3(-45, 0, -10), 5);
+	//AddSphereToWorld(Vector3(-45, 0, -30), 5);
+	//AddSphereToWorld(Vector3(-45, 0, -10), 5);
 
-	InitGameExamples();
-	InitDefaultFloor();
+	//InitGameExamples();
+	//InitDefaultFloor();
 
 	//BridgeConstraintTest();
 	//HingeTest();
 
-	testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
+	//AddMazeToWorld();
+	//testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
+	//pathfinder = AddPathfindingObjectToWorld();
+}
+
+void TutorialGame::AddMazeToWorld() {
+	grid = new NavigationGrid("TestGrid1.txt");
+
+	int nodeSize, gridWidth, gridHeight;
+
+	std::ifstream infile(Assets::DATADIR + "TestGrid1.txt");
+
+	infile >> nodeSize;
+	infile >> gridWidth;
+	infile >> gridHeight;
+
+	GridNode* allNodes = new GridNode[gridWidth * gridHeight];
+
+	for (int y = 0; y < gridHeight; ++y) {
+		for (int x = 0; x < gridWidth; ++x) {
+			GridNode& n = allNodes[(gridWidth * y) + x];
+			char type = 0;
+			infile >> type;
+			n.type = type;
+			n.position = Vector3((float)(x * nodeSize), 0, (float)(y * nodeSize));
+			std::cout << type << '\n';
+			if (type == 120)mazeAABBs.emplace_back(AddCubeToWorld(n.position, { (float)nodeSize/2,(float)nodeSize/2,(float)nodeSize/2 },0));
+		}
+	}
+	return;
 }
 
 /*
@@ -418,11 +529,11 @@ GameObject* TutorialGame::AddOBBToWorld(const Vector3& position, Vector3 dimensi
 }
 
 GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
-	float meshSize		= 1.0f;
+	float meshSize		= 5;
 	float inverseMass	= 0.5f;
 
 	GameObject* character = new GameObject();
-	SphereVolume* volume  = new SphereVolume(1.0f);
+	SphereVolume* volume  = new SphereVolume(meshSize);
 	//OBBVolume* volume = new OBBVolume(Vector3(1, 1, 3));
 
 	character->SetBoundingVolume((CollisionVolume*)volume);
@@ -508,8 +619,30 @@ StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position) {
 	return apple;
 }
 
+PathfindingObject* TutorialGame::AddPathfindingObjectToWorld() {
+	Vector3 startPos(80, 0, 10);
+	Vector3 endPos(80, 0, 80);
+	PathfindingObject* apple = new PathfindingObject(grid,startPos,endPos,player,world);
+	float radius = 5;
+	SphereVolume* volume = new SphereVolume(radius);
+	apple->SetBoundingVolume((CollisionVolume*)volume);
+	apple->GetTransform()
+		.SetScale(Vector3(1, 1, 1)*radius)
+		.SetPosition(startPos);
+
+	apple->SetRenderObject(new RenderObject(&apple->GetTransform(), sphereMesh, nullptr, basicShader));
+	apple->SetPhysicsObject(new PhysicsObject(&apple->GetTransform(), apple->GetBoundingVolume()));
+
+	apple->GetPhysicsObject()->SetInverseMass(1.0f);
+	apple->GetPhysicsObject()->InitSphereInertia();
+
+	world->AddGameObject(apple);
+
+	return apple;
+}
+
 void TutorialGame::InitDefaultFloor() {
-	AddFloorToWorld(Vector3(0, -20, 0));
+	AddFloorToWorld(Vector3(0, -6, 0));
 }
 
 void TutorialGame::InitGameExamples() {
@@ -684,4 +817,4 @@ void TutorialGame::MoveSelectedObject() {
 	}
 }
 
-
+#pragma endregion

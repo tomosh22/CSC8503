@@ -90,6 +90,177 @@ void TestStateMachine() {
 	}
 }
 
+void TestBehaviourTree() {
+	float behaviourTimer;
+	float distanceToTarget;
+	BehaviourAction* findKey = new BehaviourAction("Find Key", [&](float dt, BehaviourState state)->BehaviourState {
+		if (state == Initialise) {
+			std::cout << "Looking for key\n";
+			behaviourTimer = rand() % 100;
+			state = Ongoing;
+			return state;
+		}
+		else if (state == Ongoing) {
+			behaviourTimer -= dt;
+			if (behaviourTimer <= 0) {
+				std::cout << "key found\n";
+				return Success;
+			}
+		}
+		});
+
+	BehaviourAction* goToRoom = new BehaviourAction("Go To Room", [&](float dt, BehaviourState state)->BehaviourState {
+		if (state == Initialise) {
+			std::cout << "going to room\n";
+			state = Ongoing;
+			return state;
+		}
+		else if (state == Ongoing) {
+			distanceToTarget -= dt;
+			if (distanceToTarget <= 0) {
+				std::cout << "reached room\n";
+				return Success;
+			}
+		}
+		});
+
+	BehaviourAction* openDoor = new BehaviourAction("Open DOor", [&](float dt, BehaviourState state)->BehaviourState {
+		if (state == Initialise) {
+			std::cout << "opening door\n";
+			return Success;
+		}
+		return state;
+		});
+
+	BehaviourAction* lookForTreasure = new BehaviourAction("Look For Treasure", [&](float dt, BehaviourState state)->BehaviourState {
+		if (state == Initialise) {
+			std::cout << "Looking for treasure\n";
+			return Ongoing;
+		}
+		else if (state == Ongoing) {
+			bool found = rand() % 2;
+			if (found) {
+				std::cout << "treasure found\n";
+				return Success;
+			}
+			std::cout << "no treasure found\n";
+			return Failure;
+		}
+		});
+
+	BehaviourAction* lookForItems = new BehaviourAction("Look For Items", [&](float dt, BehaviourState state)->BehaviourState {
+		if (state == Initialise) {
+			std::cout << "Looking for items\n";
+			return Ongoing;
+		}
+		else if (state == Ongoing) {
+			bool found = rand() % 2;
+			if (found) {
+				std::cout << "items found\n";
+				return Success;
+			}
+			std::cout << "no items found\n";
+			return Failure;
+		}
+		});
+
+	BehaviourSequence* sequence = new BehaviourSequence("Room Sequence");
+	sequence->AddChild(findKey);
+	sequence->AddChild(goToRoom);
+	sequence->AddChild(openDoor);
+	
+	BehaviourSelector* selection = new BehaviourSelector("Loot Selection");
+	selection->AddChild(lookForTreasure);
+	selection->AddChild(lookForItems);
+
+	BehaviourSequence* rootSequence = new BehaviourSequence("Root Sequence");
+	rootSequence->AddChild(sequence);
+	rootSequence->AddChild(selection);
+
+	for (int i = 0; i < 5; i++)
+	{
+		rootSequence->Reset();
+		behaviourTimer = 0;
+		distanceToTarget = rand() % 250;
+		BehaviourState state = Ongoing;
+		std::cout << "going on adventure\n";
+		while (state == Ongoing) {
+			state = rootSequence->Execute(1);
+		}
+		if (state == Success)std::cout << "success\n";
+		else if (state == Failure)std::cout << "failure\n";
+	}
+}
+
+class PauseScreen : public PushdownState {
+	PushdownResult OnUpdate(float dt, PushdownState** newState) override {
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::U)) {
+			return PushdownResult::Pop;
+		}
+		return PushdownResult::NoChange;
+	}
+	void OnAwake() override {
+		std::cout << "press u to unpause\n";
+	}
+};
+
+class GameScreen : public PushdownState {
+	PushdownResult OnUpdate(float dt, PushdownState** newState) override {
+		pauseReminder -= dt;
+		if (pauseReminder < 0) {
+			std::cout << "Coins mined: " << coinsMined << "\n"
+			<< "press p to pause, f1 to return to menu\n";
+		pauseReminder += 1;
+		}
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::P)) {
+			*newState = new PauseScreen();
+			return PushdownResult::Push;
+		}
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::F1)) {
+			std::cout << "returning to  menu\n";
+			return PushdownResult::Pop;
+		}
+		if (rand() % 7 == 0)coinsMined++;
+		return PushdownResult::NoChange;
+	}
+	void OnAwake() override {
+		std::cout << "preparing to mine\n";
+	}
+
+protected:
+	int coinsMined = 0;
+	float pauseReminder = 1;
+};
+
+class IntroScreen : public PushdownState {
+	PushdownResult OnUpdate(float dt, PushdownState * *newState) override {
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::SPACE)) {
+			*newState = new GameScreen();
+			return PushdownResult::Push;
+		}
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::ESCAPE)) {
+			return PushdownResult::Pop;
+			
+		}
+		return PushdownResult::NoChange;
+		
+	};
+	
+	void OnAwake() override {
+		std::cout << "Welcome to a really awesome game!\n";
+		std::cout << "Press Space To Begin or escape to quit!\n";
+	}
+	
+};
+
+void TestPushdownAutomata(Window* w) {
+	PushdownMachine machine(new IntroScreen());
+	while (w->UpdateWindow()) {
+		float dt = w->GetTimer()->GetTimeDeltaSeconds();
+		if (!machine.Update(dt))return;
+	}
+}
+
 /*
 
 The main function should look pretty familar to you!
@@ -103,9 +274,10 @@ hide or show the
 
 */
 int main() {
+	//TestBehaviourTree();
 	TestPathfinding();
 	Window*w = Window::CreateGameWindow("CSC8503 Game technology!", 1280, 720);
-
+	//TestPushdownAutomata(w);
 	if (!w->HasInitialised()) {
 		return -1;
 	}	

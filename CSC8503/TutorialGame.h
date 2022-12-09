@@ -7,8 +7,35 @@
 
 #include "StateGameObject.h"
 
+#include "NavigationGrid.h"
+#include "NavigationPath.h"
+#include "NavigationMap.h"
+#include "Assets.h"
+
+
 namespace NCL {
 	namespace CSC8503 {
+
+		class PathfindingObject : public StateGameObject {
+
+		public:
+			PathfindingObject(NavigationGrid* grid, Vector3 startPos, Vector3 endPos,GameObject* player,GameWorld* world);
+			~PathfindingObject();
+
+			virtual void Update(float dt);
+			bool CanSeePlayer();
+
+		protected:
+			NavigationPath path;
+			void FollowPath(float dt);
+			StateMachine* stateMachine;
+			bool finished;
+			Vector3 dest;
+			float time;
+			GameObject* player;
+			GameWorld* world;
+		};
+
 		class TutorialGame		{
 		public:
 			TutorialGame();
@@ -27,6 +54,7 @@ namespace NCL {
 			void InitCamera();
 			void UpdateKeys();
 
+			void InitMaze();
 			void InitWorld();
 
 			/*
@@ -49,6 +77,10 @@ namespace NCL {
 			void MoveSelectedObject();
 			void DebugObjectMovement();
 			void LockedObjectMovement();
+
+			NavigationGrid* grid;
+			void AddMazeToWorld();
+			vector<Vector3> mazeNodes;
 
 			GameObject* AddFloorToWorld(const Vector3& position);
 			GameObject* AddSphereToWorld(const Vector3& position, float radius, float inverseMass = 10.0f);
@@ -96,7 +128,13 @@ namespace NCL {
 			GameObject* objClosest = nullptr;
 
 			StateGameObject* AddStateObjectToWorld(const Vector3& position);
+			PathfindingObject* AddPathfindingObjectToWorld();
 			StateGameObject* testStateObject;
+
+			std::vector<GameObject*> mazeAABBs;
+			PathfindingObject* pathfinder;
+
+			GameObject* player;
 		};
 	}
 }

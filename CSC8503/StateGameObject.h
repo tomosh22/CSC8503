@@ -1,5 +1,9 @@
 #pragma once
 #include "GameObject.h"
+#include "StateTransition.h"
+#include "StateMachine.h"
+#include "State.h"
+#include "PhysicsObject.h"
 
 namespace NCL {
     namespace CSC8503 {
