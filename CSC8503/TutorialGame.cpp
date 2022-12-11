@@ -21,23 +21,26 @@ using namespace CSC8503;
 //#define LOCKED_CAMERA
 
 #pragma region PathfindingObject
-PathfindingObject::PathfindingObject(NavigationGrid* grid, Vector3 startPos, Vector3 endPos,GameObject* player,GameWorld* world) {
+PathfindingObject::PathfindingObject(NavigationGrid* grid, Vector3 startPos,
+	Vector3 endPos,GameObject* player,GameWorld* world, std::vector<GameObject*> mazeTargets) {
 	
 	stateMachine = new StateMachine();
-	grid->FindPath(startPos, endPos, path);
-	path.PopWaypoint(dest);
+	grid->FindPath(GetTransform().GetPosition(), endPos, path);
+	path.PopWaypoint(destWaypoint);
 	time = 0;
 	this->player = player;
 	this->world = world;
+	this->mazeTargets = mazeTargets;
+	std::cout << mazeTargets[0]->GetTransform().GetPosition();
 
 	State* movingForward = new State(
 		[&](float dt)->void {
 			
 			Vector3 position = GetTransform().GetPosition();
-			if ((position - dest).Length() < 5) {
-				finished = path.PopWaypoint(dest);
+			if ((position - destWaypoint).Length() < 5) {
+				finished = path.PopWaypoint(destWaypoint);
 			}
-			GetPhysicsObject()->AddForce((this->dest - position));
+			GetPhysicsObject()->AddForce((this->destWaypoint - position));
 			time += dt;
 		}
 	);
@@ -75,6 +78,39 @@ bool PathfindingObject::CanSeePlayer() {
 
 
 }
+
+GameObject* NCL::CSC8503::PathfindingObject::GetNearestMazeTarget(Vector3 from)
+{
+	GameObject* target = mazeTargets[0];
+		float lowestDist = (from - target->GetTransform().GetPosition()).Length();
+		for (int i = 1; i < 100; i++)
+		{
+			if (mazeTargets[i] == NULL)continue;
+			float dist = (from - mazeTargets[i]->GetTransform().GetPosition()).Length();
+			if (dist < lowestDist) {
+				dist = lowestDist;
+				target = mazeTargets[i];
+			}
+		}
+		return target;
+}
+
+
+
+//Target* PathfindingObject::GetNearestMazeTarget(Vector3 from) {
+//	Target* target = mazeTargets[0];
+//	float lowestDist = (from - target->GetTransform().GetPosition()).Length();
+//	for (int i = 1; i < 100; i++)
+//	{
+//		if (mazeTargets[i] == NULL)continue;
+//		float dist = (from - mazeTargets[i]->GetTransform().GetPosition()).Length();
+//		if (dist < lowestDist) {
+//			dist = lowestDist;
+//			target = mazeTargets[i];
+//		}
+//	}
+//	return target;
+//}
 
 #pragma endregion
 
@@ -136,33 +172,49 @@ TutorialGame::~TutorialGame()	{
 	delete world;
 }
 
+void TutorialGame::UpdateRLCam() {
+	Vector3 objPos = lockedObject->GetTransform().GetPosition();
+
+	lookAt = GetNearestTarget()->GetTransform().GetPosition();
+
+
+
+	Vector3 lookDir = lookAt - objPos;
+	lookDir.Normalise();
+
+
+	Vector3 camPos = objPos - lookDir * 20
+		//+ lockedObject->GetTransform().GetOrientation() * Vector3(0, 0, 1) * -20
+		+ Vector3(0, 1, 0) * 20;
+
+
+
+	//lookAt = objPos + lockedObject->GetTransform().GetOrientation() * Vector3(0, 0, -1) + lockedObject->GetTransform().GetOrientation() * Vector3(0, 1, 0);
+
+	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, lookAt, Vector3(0, 1, 0));
+
+	Matrix4 modelMat = temp.Inverse();
+
+	Quaternion q(modelMat);
+	Vector3 angles = q.ToEuler(); //nearly there now!
+
+	world->GetMainCamera()->SetPosition(camPos);
+	world->GetMainCamera()->SetPitch(angles.x);
+	world->GetMainCamera()->SetYaw(angles.y);
+}
+
 void TutorialGame::UpdateGame(float dt) {
 	if (!inSelectionMode) {
 		world->GetMainCamera()->UpdateCamera(dt);
 	}
 	if (lockedObject != nullptr) {
-		Vector3 objPos = lockedObject->GetTransform().GetPosition();
-
-		Vector3 camPos = objPos + lockedObject->GetTransform().GetOrientation() * Vector3(0,0,1) * 5 + lockedObject->GetTransform().GetOrientation() * Vector3(0, 1, 0) * 2;
-
-		lookAt = objPos + lockedObject->GetTransform().GetOrientation() * Vector3(0, 0, -1) + lockedObject->GetTransform().GetOrientation() * Vector3(0, 1, 0);
-
-		Matrix4 temp = Matrix4::BuildViewMatrix(camPos, lookAt, Vector3(0,1,0));
-
-		Matrix4 modelMat = temp.Inverse();
-
-		Quaternion q(modelMat);
-		Vector3 angles = q.ToEuler(); //nearly there now!
-
-		world->GetMainCamera()->SetPosition(camPos);
-		world->GetMainCamera()->SetPitch(angles.x);
-		world->GetMainCamera()->SetYaw(angles.y);
+		if (mode == Gamemode::rl)UpdateRLCam();
 
 
 		
 	}
 
-	UpdateKeys();
+	UpdateKeys(dt);
 
 	if (useGravity) {
 		Debug::Print("(G)ravity on", Vector2(5, 95), Debug::RED);
@@ -206,10 +258,12 @@ void TutorialGame::UpdateGame(float dt) {
 
 
 	if (testStateObject)testStateObject->Update(dt);
-	if (pathfinder)pathfinder->Update(dt);
+	if (pathfinder != NULL && pathfinder != nullptr) {
+		pathfinder->Update(dt);
+	}
 }
 
-void TutorialGame::UpdateKeys() {
+void TutorialGame::UpdateKeys(float dt) {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
 		selectionObject = nullptr;
 		InitWorld(); //We can reset the simulation at any time with F1
@@ -218,8 +272,12 @@ void TutorialGame::UpdateKeys() {
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::M)) {
 		selectionObject = nullptr;
-		InitMaze(); //We can reset the simulation at any time with F1
+		InitMaze();
+	}
 
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::N)) {
+		selectionObject = nullptr;
+		InitRL();
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
@@ -249,14 +307,294 @@ void TutorialGame::UpdateKeys() {
 	}
 
 	if (lockedObject) {
-		LockedObjectMovement();
+		LockedObjectMovement(dt);
 	}
 	else {
 		DebugObjectMovement();
 	}
 }
 
-void TutorialGame::LockedObjectMovement() {
+void TutorialGame::RLMovement(float dt) {
+	Matrix4 view = world->GetMainCamera()->BuildViewMatrix();
+	Matrix4 camWorld = view.Inverse();
+
+	Vector3 rightAxis = Vector3(camWorld.GetColumn(0)); //view is inverse of model!
+
+	//forward is more tricky -  camera forward is 'into' the screen...
+	//so we can take a guess, and use the cross of straight up, and
+	//the right axis, to hopefully get a vector that's good enough!
+
+	Vector3 fwdAxis = Vector3::Cross(Vector3(0, 1, 0), rightAxis);
+	fwdAxis.y = 0.0f;
+	fwdAxis.Normalise();
+
+
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
+		selectionObject->GetPhysicsObject()->AddForce(fwdAxis * 10);
+	}
+
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
+		selectionObject->GetPhysicsObject()->AddForce(-fwdAxis);
+	}
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
+		selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, -1, 0));
+	}
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
+		selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, 1, 0));
+	}
+
+	Quaternion localRotation = selectionObject->GetTransform().GetOrientation();
+	Vector3 localUp = localRotation * Vector3(0, 1, 0);
+	Vector3 localForward = localRotation * Vector3(0, 0, -1);
+	Vector3 localRight = localRotation * Vector3(1, 0, 0);
+
+	XINPUT_STATE state;
+	ZeroMemory(&state, sizeof(XINPUT_STATE));
+	XInputGetState(0, &state);
+
+	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_A)selectionObject->GetPhysicsObject()->ApplyLinearImpulse(localUp);
+	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER)selectionObject->GetPhysicsObject()->AddForce(localForward * 50);
+	float leftTrigger = state.Gamepad.bLeftTrigger;
+	float leftRight = state.Gamepad.bRightTrigger;
+
+	float leftStickX = state.Gamepad.sThumbLX;
+	if (leftStickX > 32767)leftStickX = 32767;
+	if (leftStickX < -32767)leftStickX = -32767;
+
+	float leftStickY = state.Gamepad.sThumbLY;
+	if (leftStickY > 32767)leftStickY = 32767;
+	if (leftStickY < -32767)leftStickY = -32767;
+
+
+
+
+
+	//std::cout << selectionObject->GetPhysicsObject()->GetAngularVelocity() << '\n';
+
+
+	PhysicsObject* phys = selectionObject->GetPhysicsObject();
+	Vector3 angVel = selectionObject->GetTransform().GetOrientation().Conjugate() * phys->GetAngularVelocity();
+
+#pragma region pitch
+	//pitch
+	leftStickY *= -1; //i got the axes the wrong way round... oops
+	if (leftStickY > 10000) {
+		angVel.x += std::lerp((float)0, (float)12.46, leftStickY / 32767) * dt;
+		if (angVel.x > 3.14 * 2)angVel.x = 3.14 * 2;
+	}
+	else {
+		if (leftStickY < -10000) {
+			angVel.x -= std::lerp((float)0, (float)12.46, -leftStickY / 32767) * dt;
+			if (angVel.x < -3.14 * 2)angVel.x = -3.14 * 2;
+		}
+		else {
+			if (std::fabs(angVel.x) > 0) {
+				if (angVel.x > 0) {
+					angVel.x -= 12.46 * dt;
+					if (angVel.x < 0)angVel.x = 0;
+				}
+				else {
+					angVel.x += 12.46 * dt;
+					if (angVel.x > 0)angVel.x = 0;
+				}
+			}
+		}
+
+	}
+#pragma endregion
+
+#pragma region yaw
+	//yaw
+	leftStickX *= -1; //i got the axes the wrong way round... oops
+	if (leftStickX > 10000) {
+		angVel.y += std::lerp((float)0, (float)9.11, leftStickX / 32767) * dt;
+		if (angVel.y > 3.14 * 2)angVel.y = 3.14 * 2;
+	}
+	else {
+		if (leftStickX < -10000) {
+			angVel.y -= std::lerp((float)0, (float)9.11, -leftStickX / 32767) * dt;
+			if (angVel.y < -3.14 * 2)angVel.y = -3.14 * 2;
+		}
+		else {
+			if (std::fabs(angVel.y) > 0) {
+				if (angVel.y > 0) {
+					angVel.y -= 9.11 * dt;
+					if (angVel.y < 0)angVel.y = 0;
+				}
+				else {
+					angVel.y += 9.11 * dt;
+					if (angVel.y > 0)angVel.y = 0;
+				}
+			}
+		}
+
+	}
+#pragma endregion
+
+#pragma region roll
+	//roll
+
+	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+		angVel.z += 38.34 * dt;
+		if (angVel.z > 3.14 * 2)angVel.z = 3.14 * 2;
+	}
+	else {
+		if (angVel.z > 0) {
+			angVel.z -= 38.34;
+			if (angVel.z < 0)angVel.z = 0;
+		}
+	}
+#pragma endregion
+
+	phys->SetAngularVelocity(selectionObject->GetTransform().GetOrientation() * angVel);
+
+	Debug::DrawLine(selectionObject->GetTransform().GetPosition(), selectionObject->GetTransform().GetPosition() + localForward, Vector4(0, 0, 1, 1));
+	Debug::DrawLine(selectionObject->GetTransform().GetPosition(), selectionObject->GetTransform().GetPosition() + localUp, Vector4(0, 1, 0, 1));
+	Debug::DrawLine(selectionObject->GetTransform().GetPosition(), selectionObject->GetTransform().GetPosition() + localRight, Vector4(1, 0, 0, 1));
+
+}
+
+void TutorialGame::MazeMovement(float dt) {
+	Matrix4 view = world->GetMainCamera()->BuildViewMatrix();
+	Matrix4 camWorld = view.Inverse();
+
+	Vector3 rightAxis = Vector3(camWorld.GetColumn(0)); //view is inverse of model!
+
+	//forward is more tricky -  camera forward is 'into' the screen...
+	//so we can take a guess, and use the cross of straight up, and
+	//the right axis, to hopefully get a vector that's good enough!
+
+	Vector3 fwdAxis = Vector3::Cross(Vector3(0, 1, 0), rightAxis);
+	fwdAxis.y = 0.0f;
+	fwdAxis.Normalise();
+
+
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
+		selectionObject->GetPhysicsObject()->AddForce(fwdAxis * 10);
+	}
+
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
+		selectionObject->GetPhysicsObject()->AddForce(-fwdAxis);
+	}
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
+		selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, -1, 0));
+	}
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
+		selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, 1, 0));
+	}
+
+	Quaternion localRotation = selectionObject->GetTransform().GetOrientation();
+	Vector3 localUp = localRotation * Vector3(0, 1, 0);
+	Vector3 localForward = localRotation * Vector3(0, 0, -1);
+	Vector3 localRight = localRotation * Vector3(1, 0, 0);
+
+	XINPUT_STATE state;
+	ZeroMemory(&state, sizeof(XINPUT_STATE));
+	XInputGetState(0, &state);
+
+	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_A)selectionObject->GetPhysicsObject()->ApplyLinearImpulse(localUp);
+	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER)selectionObject->GetPhysicsObject()->AddForce(localForward * 50);
+	float leftTrigger = state.Gamepad.bLeftTrigger;
+	float leftRight = state.Gamepad.bRightTrigger;
+
+	float leftStickX = state.Gamepad.sThumbLX;
+	if (leftStickX > 32767)leftStickX = 32767;
+	if (leftStickX < -32767)leftStickX = -32767;
+
+	float leftStickY = state.Gamepad.sThumbLY;
+	if (leftStickY > 32767)leftStickY = 32767;
+	if (leftStickY < -32767)leftStickY = -32767;
+
+
+
+
+
+	//std::cout << selectionObject->GetPhysicsObject()->GetAngularVelocity() << '\n';
+
+
+	PhysicsObject* phys = selectionObject->GetPhysicsObject();
+	Vector3 angVel = selectionObject->GetTransform().GetOrientation().Conjugate() * phys->GetAngularVelocity();
+
+#pragma region pitch
+	//pitch
+	leftStickY *= -1; //i got the axes the wrong way round... oops
+	if (leftStickY > 10000) {
+		angVel.x += std::lerp((float)0, (float)12.46, leftStickY / 32767) * dt;
+		if (angVel.x > 3.14 * 2)angVel.x = 3.14 * 2;
+	}
+	else {
+		if (leftStickY < -10000) {
+			angVel.x -= std::lerp((float)0, (float)12.46, -leftStickY / 32767) * dt;
+			if (angVel.x < -3.14 * 2)angVel.x = -3.14 * 2;
+		}
+		else {
+			if (std::fabs(angVel.x) > 0) {
+				if (angVel.x > 0) {
+					angVel.x -= 12.46 * dt;
+					if (angVel.x < 0)angVel.x = 0;
+				}
+				else {
+					angVel.x += 12.46 * dt;
+					if (angVel.x > 0)angVel.x = 0;
+				}
+			}
+		}
+
+	}
+#pragma endregion
+
+#pragma region yaw
+	//yaw
+	leftStickX *= -1; //i got the axes the wrong way round... oops
+	if (leftStickX > 10000) {
+		angVel.y += std::lerp((float)0, (float)9.11, leftStickX / 32767) * dt;
+		if (angVel.y > 3.14 * 2)angVel.y = 3.14 * 2;
+	}
+	else {
+		if (leftStickX < -10000) {
+			angVel.y -= std::lerp((float)0, (float)9.11, -leftStickX / 32767) * dt;
+			if (angVel.y < -3.14 * 2)angVel.y = -3.14 * 2;
+		}
+		else {
+			if (std::fabs(angVel.y) > 0) {
+				if (angVel.y > 0) {
+					angVel.y -= 9.11 * dt;
+					if (angVel.y < 0)angVel.y = 0;
+				}
+				else {
+					angVel.y += 9.11 * dt;
+					if (angVel.y > 0)angVel.y = 0;
+				}
+			}
+		}
+
+	}
+#pragma endregion
+
+#pragma region roll
+	//roll
+
+	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+		angVel.z += 38.34 * dt;
+		if (angVel.z > 3.14 * 2)angVel.z = 3.14 * 2;
+	}
+	else {
+		if (angVel.z > 0) {
+			angVel.z -= 38.34;
+			if (angVel.z < 0)angVel.z = 0;
+		}
+	}
+#pragma endregion
+
+	phys->SetAngularVelocity(selectionObject->GetTransform().GetOrientation() * angVel);
+
+	Debug::DrawLine(selectionObject->GetTransform().GetPosition(), selectionObject->GetTransform().GetPosition() + localForward, Vector4(0, 0, 1, 1));
+	Debug::DrawLine(selectionObject->GetTransform().GetPosition(), selectionObject->GetTransform().GetPosition() + localUp, Vector4(0, 1, 0, 1));
+	Debug::DrawLine(selectionObject->GetTransform().GetPosition(), selectionObject->GetTransform().GetPosition() + localRight, Vector4(1, 0, 0, 1));
+
+}
+
+void TutorialGame::LockedObjectMovement(float dt) {
 	Matrix4 view		= world->GetMainCamera()->BuildViewMatrix();
 	Matrix4 camWorld	= view.Inverse();
 
@@ -308,17 +646,95 @@ void TutorialGame::LockedObjectMovement() {
 	if (leftStickY < -32767)leftStickY = -32767;
 
 	
-	if(std::fabs(leftStickX) > 1000)selectionObject->GetPhysicsObject()->AddTorque(localUp * 2 * -leftStickX/32767);
-	return;
 
-	if (std::fabs(leftStickY) > 1000)selectionObject->GetPhysicsObject()->AddTorque(localRight * 2 * -leftStickY/32767);
-	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_B)selectionObject->GetPhysicsObject()->AddTorque(-localForward);
-	/*Debug::DrawLine(selectionObject->GetTransform().GetPosition() - Vector3(0, 0, 1), selectionObject->GetTransform().GetPosition() + Vector3(0, 0, 1));
-	Debug::DrawLine(selectionObject->GetTransform().GetPosition() - Vector3(0, 1, 0), selectionObject->GetTransform().GetPosition() + Vector3(0, 1, 0));
-	Debug::DrawLine(selectionObject->GetTransform().GetPosition() - Vector3(1, 0, 0), selectionObject->GetTransform().GetPosition() + Vector3(1, 0, 0));*/
-	Debug::DrawLine(selectionObject->GetTransform().GetPosition() - localForward, selectionObject->GetTransform().GetPosition() + localForward);
+	
+
+	//std::cout << selectionObject->GetPhysicsObject()->GetAngularVelocity() << '\n';
+
+	
+	PhysicsObject* phys = selectionObject->GetPhysicsObject();
+	Vector3 angVel = selectionObject->GetTransform().GetOrientation().Conjugate() * phys->GetAngularVelocity();
+
+#pragma region pitch
+	//pitch
+	leftStickY *= -1; //i got the axes the wrong way round... oops
+	if (leftStickY > 10000) {
+		angVel.x += std::lerp((float)0, (float)12.46, leftStickY / 32767) * dt;
+		if (angVel.x > 3.14*2)angVel.x = 3.14*2;
+	}
+	else {
+		if (leftStickY < -10000) {
+			angVel.x -= std::lerp((float)0, (float)12.46, -leftStickY / 32767) * dt;
+			if (angVel.x < -3.14*2)angVel.x = -3.14*2;
+		}
+		else {
+			if (std::fabs(angVel.x) > 0) {
+				if (angVel.x > 0) {
+					angVel.x -= 12.46 * dt;
+					if (angVel.x < 0)angVel.x = 0;
+				}
+				else {
+					angVel.x += 12.46 * dt;
+					if (angVel.x > 0)angVel.x = 0;
+				}
+			}
+		}
+		
+	}
+#pragma endregion
+
+#pragma region yaw
+	//yaw
+	leftStickX *= -1; //i got the axes the wrong way round... oops
+	if (leftStickX > 10000) {
+		angVel.y += std::lerp((float)0, (float)9.11, leftStickX / 32767) * dt;
+		if (angVel.y > 3.14 * 2)angVel.y = 3.14 * 2;
+	}
+	else {
+		if (leftStickX < -10000) {
+			angVel.y -= std::lerp((float)0, (float)9.11, -leftStickX / 32767) * dt;
+			if (angVel.y < -3.14 * 2)angVel.y = -3.14 * 2;
+		}
+		else {
+			if (std::fabs(angVel.y) > 0) {
+				if (angVel.y > 0) {
+					angVel.y -= 9.11* dt;
+					if (angVel.y < 0)angVel.y = 0;
+				}
+				else {
+					angVel.y += 9.11 * dt;
+					if (angVel.y > 0)angVel.y = 0;
+				}
+			}
+		}
+
+	}
+#pragma endregion
+
+#pragma region roll
+	//roll
+	
+	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+		angVel.z += 38.34 * dt;
+		if (angVel.z > 3.14 * 2)angVel.z = 3.14 * 2;
+	}
+	else {
+		if (angVel.z > 0) {
+			angVel.z -= 38.34;
+			if (angVel.z < 0)angVel.z = 0;
+		}
+	}
+#pragma endregion
+	
+	phys->SetAngularVelocity(selectionObject->GetTransform().GetOrientation() * angVel);
+
+	Debug::DrawLine(selectionObject->GetTransform().GetPosition(), selectionObject->GetTransform().GetPosition() + localForward,Vector4(0,0,1,1));
+	Debug::DrawLine(selectionObject->GetTransform().GetPosition(), selectionObject->GetTransform().GetPosition() + localUp,Vector4(0,1,0,1));
+	Debug::DrawLine(selectionObject->GetTransform().GetPosition(), selectionObject->GetTransform().GetPosition() + localRight,Vector4(1,0,0,1));
 
 }
+
+
 
 void TutorialGame::DebugObjectMovement() {
 //If we've selected an object, we can manipulate it with some key presses
@@ -367,18 +783,68 @@ void TutorialGame::InitCamera() {
 	lockedObject = nullptr;
 }
 
-void TutorialGame::InitMaze() {
+void TutorialGame::Reset() {
 	world->ClearAndErase();
 	physics->Clear();
+	pathfinder = nullptr;
+	score = 0;
+	mazeTargets.clear();
+}
+
+void TutorialGame::GenerateTargets() {
+	for (int i = 0; i < NUM_TARGETS; i++)
+	{
+		Vector3 pos;
+		pos.x = rand() % 50;
+		pos.y = rand() % 50;
+		pos.z = rand() % 50;
+		targets[i] = AddTargetToWorld(pos);
+	}
+}
+
+Target* TutorialGame::GetNearestTarget() {
+	Target* target = targets[0];
+	float lowestDist = (player->GetTransform().GetPosition() - target->GetTransform().GetPosition()).Length();
+	for (int i = 1; i < NUM_TARGETS; i++)
+	{
+		float dist = (player->GetTransform().GetPosition() - targets[i]->GetTransform().GetPosition()).Length();
+		if (dist < lowestDist) {
+			dist = lowestDist;
+			target = targets[i];
+		}
+	}
+	return target;
+}
+
+
+void TutorialGame::InitRL() {
+	Reset();
+	lockedObject = AddCarToWorld(Vector3(0,10,0));
+	selectionObject = lockedObject;
+	InitDefaultFloor();
+	GenerateTargets();
+	mode = Gamemode::rl;
+}
+
+void TutorialGame::InitMaze() {
+	Reset();
 	InitDefaultFloor();
 	AddMazeToWorld();
-	player = AddPlayerToWorld(Vector3(80,0,45));
+	player = AddPlayerToWorld(Vector3(80,10,45));
+	player->GetRenderObject()->SetColour(Vector4(1, 0.6, 1, 1));
 	pathfinder = AddPathfindingObjectToWorld();
+	lockedObject = player;
+	selectionObject = lockedObject;
+	mode = Gamemode::maze;
 }
 
 void TutorialGame::InitWorld() {
-	world->ClearAndErase();
-	physics->Clear();
+	Reset();
+
+	player = AddPlayerToWorld(Vector3(80, 10, 45));
+	lockedObject = player;
+	selectionObject = lockedObject;
+	mode = Gamemode::normal;
 
 	//InitMixedGridWorld(15, 15, 3.5f, 3.5f);
 	
@@ -412,6 +878,7 @@ void TutorialGame::AddMazeToWorld() {
 
 	GridNode* allNodes = new GridNode[gridWidth * gridHeight];
 
+	targetIndex = 0;
 	for (int y = 0; y < gridHeight; ++y) {
 		for (int x = 0; x < gridWidth; ++x) {
 			GridNode& n = allNodes[(gridWidth * y) + x];
@@ -420,10 +887,59 @@ void TutorialGame::AddMazeToWorld() {
 			n.type = type;
 			n.position = Vector3((float)(x * nodeSize), 0, (float)(y * nodeSize));
 			std::cout << type << '\n';
-			if (type == 120)mazeAABBs.emplace_back(AddCubeToWorld(n.position, { (float)nodeSize/2,(float)nodeSize/2,(float)nodeSize/2 },0));
+			if (type == 120)mazeAABBs.emplace_back(AddCubeToWorld(n.position, { (float)nodeSize / 2,(float)nodeSize / 2,(float)nodeSize / 2 }, 0));
+			//else if (type == 103)HingeTest(n.position, nodeSize);
+			else if (rand() % 10 == 0)mazeTargets.emplace_back( (GameObject*)AddTargetToWorld(n.position));
 		}
 	}
 	return;
+}
+
+Target* TutorialGame::AddTargetToWorld(const Vector3& position) {
+	Target* sphere = new Target();
+	float radius = 1;
+
+
+	Vector3 sphereSize = Vector3(radius, radius, radius);
+	SphereVolume* volume = new SphereVolume(radius);
+	sphere->SetBoundingVolume((CollisionVolume*)volume);
+
+	sphere->GetTransform()
+		.SetScale(sphereSize)
+		.SetPosition(position);
+
+	sphere->SetRenderObject(new RenderObject(&sphere->GetTransform(), sphereMesh, basicTex, basicShader));
+	sphere->SetPhysicsObject(new PhysicsObject(&sphere->GetTransform(), sphere->GetBoundingVolume()));
+
+	sphere->GetPhysicsObject()->SetInverseMass(0);
+	sphere->GetPhysicsObject()->InitSphereInertia();
+
+	world->AddGameObject(sphere);
+
+	return sphere;
+}
+
+GameObject* TutorialGame::AddCarToWorld(const Vector3& position) {
+	GameObject* car = new GameObject();
+
+	Vector3 carSize = Vector3(3, 2, 5);
+	OBBVolume* volume = new OBBVolume(carSize);
+	car->SetBoundingVolume((CollisionVolume*)volume);
+	car->GetTransform()
+		.SetScale(carSize * 2)
+		.SetPosition(position)
+		.SetOrientation(Quaternion::EulerAnglesToQuaternion(0,0,0));
+
+	car->SetRenderObject(new RenderObject(&car->GetTransform(), cubeMesh, basicTex, basicShader));
+	car->SetPhysicsObject(new PhysicsObject(&car->GetTransform(), car->GetBoundingVolume()));
+
+	car->GetPhysicsObject()->SetInverseMass(0.5);
+	car->GetPhysicsObject()->InitCubeInertia();
+
+	world->AddGameObject(car,-2);
+
+
+	return car;
 }
 
 /*
@@ -622,7 +1138,7 @@ StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position) {
 PathfindingObject* TutorialGame::AddPathfindingObjectToWorld() {
 	Vector3 startPos(80, 0, 10);
 	Vector3 endPos(80, 0, 80);
-	PathfindingObject* apple = new PathfindingObject(grid,startPos,endPos,player,world);
+	PathfindingObject* apple = new PathfindingObject(grid,startPos,endPos,player,world,mazeTargets);
 	float radius = 5;
 	SphereVolume* volume = new SphereVolume(radius);
 	apple->SetBoundingVolume((CollisionVolume*)volume);
@@ -635,8 +1151,10 @@ PathfindingObject* TutorialGame::AddPathfindingObjectToWorld() {
 
 	apple->GetPhysicsObject()->SetInverseMass(1.0f);
 	apple->GetPhysicsObject()->InitSphereInertia();
+	
+	
 
-	world->AddGameObject(apple);
+	world->AddGameObject(apple,9999);
 
 	return apple;
 }
@@ -718,18 +1236,17 @@ void TutorialGame::BridgeConstraintTest() {
 	world->AddConstraint(constraint);
 }
 
-void TutorialGame::HingeTest() {
-	Vector3 doorSize = Vector3(3, 2, 3);
-	Vector3 doorPos = Vector3(-50, 50, -50);
-	GameObject* door = AddOBBToWorld(doorPos, doorSize, 5);
+void TutorialGame::HingeTest(Vector3 position, int nodeSize) {
+	Vector3 doorSize = Vector3(3, 2, 0.1);
+	GameObject* door = AddOBBToWorld(position - Vector3(nodeSize/2 - 3.5, 0, 0), doorSize, 5);
 
-	GameObject* hinge = AddCubeToWorld(doorPos - Vector3(5, 1, 0), Vector3(1, 1, 1), 0);
+	GameObject* hinge = AddCubeToWorld(position - Vector3(nodeSize,0,0), Vector3(1, 1, 1), 0);
 	
 	OrientationConstraint* constraint1 = new OrientationConstraint(door, hinge, Vector3(0, 1, 0));
-	world->AddConstraint(constraint1);
+	//world->AddConstraint(constraint1);
 
 	PositionConstraint* constraint3 = new PositionConstraint(door, hinge,10);
-	world->AddConstraint(constraint3);
+	//world->AddConstraint(constraint3);
 }
 
 /*

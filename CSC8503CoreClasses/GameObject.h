@@ -73,7 +73,8 @@ namespace NCL::CSC8503 {
 		int		GetWorldID() const {
 			return worldID;
 		}
-
+		bool isTrigger;
+		
 	protected:
 		Transform			transform;
 
@@ -87,6 +88,10 @@ namespace NCL::CSC8503 {
 		std::string	name;
 
 		Vector3 broadphaseAABB;
+
+		
+
+		
 	};
 }
 

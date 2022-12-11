@@ -12,28 +12,45 @@
 #include "NavigationMap.h"
 #include "Assets.h"
 
-
+#define NUM_TARGETS 10
+#define NUM_MAZE_TARGETS 10
 namespace NCL {
 	namespace CSC8503 {
-
+#pragma region PathfindingObject
 		class PathfindingObject : public StateGameObject {
-
 		public:
-			PathfindingObject(NavigationGrid* grid, Vector3 startPos, Vector3 endPos,GameObject* player,GameWorld* world);
+			PathfindingObject(NavigationGrid* grid, Vector3 startPos, Vector3 endPos,
+				GameObject* player,GameWorld* world, std::vector<GameObject*> mazeTargets);
 			~PathfindingObject();
 
 			virtual void Update(float dt);
 			bool CanSeePlayer();
-
+			GameObject* GetNearestMazeTarget(Vector3 from);
+			std::vector<GameObject*> mazeTargets;
 		protected:
 			NavigationPath path;
 			void FollowPath(float dt);
 			StateMachine* stateMachine;
 			bool finished;
-			Vector3 dest;
+			Vector3 destWaypoint;
 			float time;
 			GameObject* player;
 			GameWorld* world;
+			
+			
+		};
+#pragma endregion
+
+		class Target : public GameObject {
+		public:
+			Target(string objectName = "") : GameObject(objectName) { isTrigger = true; };
+			 void OnCollisionBegin(GameObject* otherObject) override {
+				 std::cout << "triggered";
+			 }
+		};
+
+		enum class Gamemode {
+			normal,maze,rl
 		};
 
 		class TutorialGame		{
@@ -52,9 +69,14 @@ namespace NCL {
 			void InitialiseAssets();
 
 			void InitCamera();
-			void UpdateKeys();
+			void UpdateKeys(float dt);
 
+			void Reset();
+
+			void RLMovement(float dt);
+			void InitRL();
 			void InitMaze();
+			void MazeMovement(float dt);
 			void InitWorld();
 
 			/*
@@ -69,14 +91,14 @@ namespace NCL {
 			void InitCubeGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, const Vector3& cubeDims);
 
 			void BridgeConstraintTest();
-			void HingeTest();
+			void HingeTest(Vector3 position, int nodeSize);
 
 			void InitDefaultFloor();
 
 			bool SelectObject();
 			void MoveSelectedObject();
 			void DebugObjectMovement();
-			void LockedObjectMovement();
+			void LockedObjectMovement(float dt);
 
 			NavigationGrid* grid;
 			void AddMazeToWorld();
@@ -90,6 +112,13 @@ namespace NCL {
 			GameObject* AddPlayerToWorld(const Vector3& position);
 			GameObject* AddEnemyToWorld(const Vector3& position);
 			GameObject* AddBonusToWorld(const Vector3& position);
+
+			GameObject* AddCarToWorld(const Vector3& position);
+			Target* AddTargetToWorld(const Vector3& position);
+			void GenerateTargets();
+			Target* GetNearestTarget();
+			
+			void UpdateRLCam();
 
 #ifdef USEVULKAN
 			GameTechVulkanRenderer*	renderer;
@@ -132,9 +161,16 @@ namespace NCL {
 			StateGameObject* testStateObject;
 
 			std::vector<GameObject*> mazeAABBs;
-			PathfindingObject* pathfinder;
+			std::vector<GameObject*> mazeTargets;
+			int targetIndex;
+			PathfindingObject* pathfinder = nullptr;
 
 			GameObject* player;
+
+			Gamemode mode;
+			int score;
+			Target* targets[NUM_TARGETS];
+			Target nearestTarget;
 		};
 	}
 }

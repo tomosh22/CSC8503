@@ -30,16 +30,19 @@ void GameWorld::Clear() {
 void GameWorld::ClearAndErase() {
 	for (auto& i : gameObjects) {
 		delete i;
+		i = nullptr;
 	}
 	for (auto& i : constraints) {
 		delete i;
+		i = nullptr;
 	}
 	Clear();
 }
 
 void GameWorld::AddGameObject(GameObject* o, int worldID) {
 	gameObjects.emplace_back(o);
-	if(worldID == -1)o->SetWorldID(worldIDCounter++);
+	if (worldID == -1)o->SetWorldID(worldIDCounter++);
+	else o->SetWorldID(worldID);
 	worldStateCounter++;
 }
 

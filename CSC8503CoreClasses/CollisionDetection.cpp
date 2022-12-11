@@ -328,8 +328,8 @@ bool  CollisionDetection::OBBSphereIntersection(const OBBVolume& volumeA, const 
 
 	if (AABBSphereIntersection(tempAABB, blankTransform, volumeB, tempTransform, collisionInfo)) {
 		collisionInfo.point.normal = worldTransformA.GetOrientation() * collisionInfo.point.normal;
-		collisionInfo.point.localA = collisionInfo.point.localA + deltaPos;
-		collisionInfo.point.localB = collisionInfo.point.localB + deltaPos;
+		collisionInfo.point.localA = worldTransformA.GetOrientation() * collisionInfo.point.localA;
+		collisionInfo.point.localB = worldTransformA.GetOrientation() * collisionInfo.point.localB;
 		return true;
 	}
 	return false;
@@ -463,30 +463,30 @@ bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transfo
 	Vector3 pointB;
 	Vector3 planes[15] = {
 		//faces
-		ARight,
-		AUp,
-		AForward,
-		BRight,
-		BUp,
-		BForward,
+		ARight.Normalised(),
+		AUp.Normalised(),
+		AForward.Normalised(),
+		BRight.Normalised(),
+		BUp.Normalised(),
+		BForward.Normalised(),
 
 		//edges
-		Vector3::Cross(ARight, BRight),
-		Vector3::Cross(ARight, BUp),
-		Vector3::Cross(ARight, BForward),
-		Vector3::Cross(AUp, BRight),
-		Vector3::Cross(AUp, BUp),
-		Vector3::Cross(AUp, BForward),
-		Vector3::Cross(AForward, BRight),
-		Vector3::Cross(AForward, BUp),
-		Vector3::Cross(AForward, BForward)
+		Vector3::Cross(ARight, BRight).Normalised(),
+		Vector3::Cross(ARight, BUp).Normalised(),
+		Vector3::Cross(ARight, BForward).Normalised(),
+		Vector3::Cross(AUp, BRight).Normalised(),
+		Vector3::Cross(AUp, BUp).Normalised(),
+		Vector3::Cross(AUp, BForward).Normalised(),
+		Vector3::Cross(AForward, BRight).Normalised(),
+		Vector3::Cross(AForward, BUp).Normalised(),
+		Vector3::Cross(AForward, BForward).Normalised()
 	};
 	for (int i = 0; i < 15; i++)
 	{
 		if (!SAT(deltaPos, planes[i], worldTransformA, worldTransformB, volumeA.GetHalfDimensions(), volumeB.GetHalfDimensions(), penDistance, normal,pointA,pointB))return false;
 	}
 	//todo calculate contact point properly
-	collisionInfo.AddContactPoint(pointA, pointB, normal, penDistance,true);
+	collisionInfo.AddContactPoint(pointA, pointB, normal, penDistance,false);
 	//std::cout << "collision\n";
 	return true;
 

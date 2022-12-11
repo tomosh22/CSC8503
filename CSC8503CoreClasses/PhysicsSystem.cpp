@@ -231,13 +231,13 @@ void PhysicsSystem::BasicCollisionDetection() {
 				point.normal /= info.numPoints;
 				point.penetration /= info.numPoints;
 
-				
-				NCL::VolumeType typeA = info.a->GetPhysicsObject()->GetCollisionVolume()->type;
-				NCL::VolumeType typeB = info.b->GetPhysicsObject()->GetCollisionVolume()->type;
-				//if (typeA == typeB && typeA == NCL::VolumeType::Sphere)ProjectionResolveCollision(*info.a, *info.b, point);
-				//else	ImpulseResolveCollision(*info.a, *info.b, point);
-				ImpulseResolveCollision(*info.a, *info.b, point);
-				
+				if (!(*i)->isTrigger && !(*j)->isTrigger) {
+					NCL::VolumeType typeA = info.a->GetPhysicsObject()->GetCollisionVolume()->type;
+					NCL::VolumeType typeB = info.b->GetPhysicsObject()->GetCollisionVolume()->type;
+					//if (typeA == typeB && typeA == NCL::VolumeType::Sphere)ProjectionResolveCollision(*info.a, *info.b, point);
+					//else	ImpulseResolveCollision(*info.a, *info.b, point);
+					ImpulseResolveCollision(*info.a, *info.b, point);
+				}
 				info.framesLeft = numCollisionFrames;
 				allCollisions.insert(info);
 			}
@@ -464,7 +464,7 @@ ones in the next 'game' frame.
 void PhysicsSystem::ClearForces() {
 	gameWorld.OperateOnContents(
 		[](GameObject* o) {
-			o->GetPhysicsObject()->ClearForces();
+			if(o->GetPhysicsObject() != NULL)o->GetPhysicsObject()->ClearForces();
 		}
 	);
 }

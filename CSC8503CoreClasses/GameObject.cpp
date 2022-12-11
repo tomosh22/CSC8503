@@ -14,6 +14,7 @@ GameObject::GameObject(string objectName)	{
 	physicsObject	= nullptr;
 	renderObject	= nullptr;
 	networkObject	= nullptr;
+	isTrigger = false;
 }
 
 GameObject::~GameObject()	{
