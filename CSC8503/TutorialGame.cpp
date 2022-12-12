@@ -25,23 +25,36 @@ PathfindingObject::PathfindingObject(NavigationGrid* grid, Vector3 startPos,
 	Vector3 endPos,GameObject* player,GameWorld* world, std::vector<GameObject*> mazeTargets) {
 	
 	stateMachine = new StateMachine();
-	grid->FindPath(GetTransform().GetPosition(), endPos, path);
-	path.PopWaypoint(destWaypoint);
+	
 	time = 0;
 	this->player = player;
 	this->world = world;
 	this->mazeTargets = mazeTargets;
-	std::cout << mazeTargets[0]->GetTransform().GetPosition();
+	this->grid = grid;
+	std::cout << grid << '\n';
+	dest = GetNearestMazeTarget(startPos)->GetTransform().GetPosition();
+	bool found = this->grid->FindPath(startPos, dest, path);
+	path.PopWaypoint(destWaypoint);
+	*testInt = 98765;
 
 	State* movingForward = new State(
 		[&](float dt)->void {
-			
+			//std::cout << dest << ' ' << destWaypoint << '\n';
+			std::cout << *testInt<< '\n';
 			Vector3 position = GetTransform().GetPosition();
+			//std::cout << position << '\n';
+			if ((position - dest).Length() < 5) {
+				dest = GetNearestMazeTarget(GetTransform().GetPosition())->GetTransform().GetPosition();
+				this->grid->FindPath(GetTransform().GetPosition(), dest, path);
+				path.PopWaypoint(destWaypoint);
+			}
 			if ((position - destWaypoint).Length() < 5) {
 				finished = path.PopWaypoint(destWaypoint);
 			}
-			GetPhysicsObject()->AddForce((this->destWaypoint - position));
+			GetPhysicsObject()->AddForce((this->destWaypoint - position).Normalised() * 5);
 			time += dt;
+			Debug::DrawLine(dest, dest + Vector3(0, 1, 0),Vector4(0,1,0,1));
+			Debug::DrawLine(destWaypoint, destWaypoint + Vector3(0, 1, 0),Vector4(1,0,0,1));
 		}
 	);
 	State* chasingPlayer = new State(
@@ -54,14 +67,14 @@ PathfindingObject::PathfindingObject(NavigationGrid* grid, Vector3 startPos,
 	stateMachine->AddState(movingForward);
 	stateMachine->AddState(chasingPlayer);
 
-	stateMachine->AddTransition(new StateTransition(movingForward, chasingPlayer, [&]()->bool {return CanSeePlayer(); }));
-	stateMachine->AddTransition(new StateTransition(chasingPlayer, movingForward, [&]()->bool {return !CanSeePlayer(); }));
+	//stateMachine->AddTransition(new StateTransition(movingForward, chasingPlayer, [&]()->bool {return CanSeePlayer(); }));
+	//stateMachine->AddTransition(new StateTransition(chasingPlayer, movingForward, [&]()->bool {return !CanSeePlayer(); }));
 
 }
 
 void PathfindingObject::Update(float dt) {
 	stateMachine->Update(dt);
-	std::cout << CanSeePlayer();
+	//std::cout << CanSeePlayer();
 }
 
 bool PathfindingObject::CanSeePlayer() {
@@ -81,12 +94,11 @@ bool PathfindingObject::CanSeePlayer() {
 
 GameObject* NCL::CSC8503::PathfindingObject::GetNearestMazeTarget(Vector3 from)
 {
-	GameObject* target = mazeTargets[0];
+	GameObject* target = mazeTargets.at(0);
 		float lowestDist = (from - target->GetTransform().GetPosition()).Length();
-		for (int i = 1; i < 100; i++)
+		for (int i = 1; i < mazeTargets.size(); i++)
 		{
-			if (mazeTargets[i] == NULL)continue;
-			float dist = (from - mazeTargets[i]->GetTransform().GetPosition()).Length();
+			float dist = (from - mazeTargets.at(i)->GetTransform().GetPosition()).Length();
 			if (dist < lowestDist) {
 				dist = lowestDist;
 				target = mazeTargets[i];
@@ -155,6 +167,7 @@ void TutorialGame::InitialiseAssets() {
 
 	InitCamera();
 	InitWorld();
+	
 }
 
 TutorialGame::~TutorialGame()	{
@@ -889,14 +902,14 @@ void TutorialGame::AddMazeToWorld() {
 			std::cout << type << '\n';
 			if (type == 120)mazeAABBs.emplace_back(AddCubeToWorld(n.position, { (float)nodeSize / 2,(float)nodeSize / 2,(float)nodeSize / 2 }, 0));
 			//else if (type == 103)HingeTest(n.position, nodeSize);
-			else if (rand() % 10 == 0)mazeTargets.emplace_back( (GameObject*)AddTargetToWorld(n.position));
+			else if (rand() % 10 == 0)mazeTargets.emplace_back( (GameObject*)AddTargetToWorld(n.position,&mazeTargets));
 		}
 	}
 	return;
 }
 
-Target* TutorialGame::AddTargetToWorld(const Vector3& position) {
-	Target* sphere = new Target();
+Target* TutorialGame::AddTargetToWorld(const Vector3& position, std::vector<GameObject*>* parentVector) {
+	Target* sphere = new Target(this->world);
 	float radius = 1;
 
 
@@ -914,7 +927,11 @@ Target* TutorialGame::AddTargetToWorld(const Vector3& position) {
 	sphere->GetPhysicsObject()->SetInverseMass(0);
 	sphere->GetPhysicsObject()->InitSphereInertia();
 
+	sphere->parentVector = parentVector;
+
 	world->AddGameObject(sphere);
+	
+	
 
 	return sphere;
 }

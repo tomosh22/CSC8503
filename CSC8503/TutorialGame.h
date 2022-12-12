@@ -32,10 +32,13 @@ namespace NCL {
 			void FollowPath(float dt);
 			StateMachine* stateMachine;
 			bool finished;
+			Vector3 dest;
 			Vector3 destWaypoint;
 			float time;
 			GameObject* player;
 			GameWorld* world;
+			NavigationGrid* grid;
+			int* testInt = new int(123456);
 			
 			
 		};
@@ -43,10 +46,27 @@ namespace NCL {
 
 		class Target : public GameObject {
 		public:
-			Target(string objectName = "") : GameObject(objectName) { isTrigger = true; };
+			Target() {};
+			Target(GameWorld* world,string objectName = "") : GameObject(objectName) {
+				isTrigger = true;
+				this->world = world;
+				deleteOnTrigger = true;
+			};
 			 void OnCollisionBegin(GameObject* otherObject) override {
-				 std::cout << "triggered";
+				 //std::cout << "triggered";
+				 if (parentVector != nullptr) {
+					 for (int i = 0; i < parentVector->size(); i++)
+					 {
+						 if (parentVector->at(i) == this) {
+							 parentVector->erase(parentVector->begin() + i);
+						 }
+					 }
+				 };
+				 world->RemoveGameObject(this, true);
+				 
 			 }
+			 GameWorld* world;
+			 std::vector<GameObject*>* parentVector;
 		};
 
 		enum class Gamemode {
@@ -114,7 +134,7 @@ namespace NCL {
 			GameObject* AddBonusToWorld(const Vector3& position);
 
 			GameObject* AddCarToWorld(const Vector3& position);
-			Target* AddTargetToWorld(const Vector3& position);
+			Target* AddTargetToWorld(const Vector3& position, std::vector<GameObject*>* parentVector = nullptr);
 			void GenerateTargets();
 			Target* GetNearestTarget();
 			

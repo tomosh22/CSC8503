@@ -74,6 +74,7 @@ namespace NCL::CSC8503 {
 			return worldID;
 		}
 		bool isTrigger;
+		bool deleteOnTrigger;
 		
 	protected:
 		Transform			transform;

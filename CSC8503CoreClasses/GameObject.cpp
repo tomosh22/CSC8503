@@ -15,6 +15,7 @@ GameObject::GameObject(string objectName)	{
 	renderObject	= nullptr;
 	networkObject	= nullptr;
 	isTrigger = false;
+	deleteOnTrigger = false;
 }
 
 GameObject::~GameObject()	{

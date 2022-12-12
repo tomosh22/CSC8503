@@ -164,12 +164,14 @@ void PhysicsSystem::UpdateCollisionList() {
 		if ((*i).framesLeft == numCollisionFrames) {
 			i->a->OnCollisionBegin(i->b);
 			i->b->OnCollisionBegin(i->a);
+			if (i->a->deleteOnTrigger || i->b->deleteOnTrigger) { i = allCollisions.erase(i); continue; }
 		}
 
 		CollisionDetection::CollisionInfo& in = const_cast<CollisionDetection::CollisionInfo&>(*i);
 		in.framesLeft--;
-
-		if ((*i).framesLeft < 0) {
+		
+		if ((*i).framesLeft < 0){// && i->a != nullptr && i->b != nullptr) {
+			//std::cout << i->a;
 			i->a->OnCollisionEnd(i->b);
 			i->b->OnCollisionEnd(i->a);
 			i = allCollisions.erase(i);
