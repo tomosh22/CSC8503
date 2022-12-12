@@ -308,7 +308,7 @@ int main() {
 
 		g->UpdateGame(dt);
 		
-		DisplayPathfinding();
+		
 	}
 	Window::DestroyGameWindow();
 }

@@ -206,39 +206,19 @@ void PhysicsSystem::BasicCollisionDetection() {
 	for (auto i = first; i != last; i++)
 	{
 		if ((*i)->GetPhysicsObject() == nullptr) continue;
-		
 
-		for (auto j = i+1; j != last; j++)
+
+		for (auto j = i + 1; j != last; j++)
 		{
 			if ((*j)->GetPhysicsObject() == nullptr)continue;
 			CollisionDetection::CollisionInfo info;
 			if (CollisionDetection::ObjectIntersection(*i, *j, info)) {
-				//std::cout << "collision between " << (*i)->GetName() << "and " << (*j)->GetName() << '\n';
-				
-				CollisionDetection::ContactPoint point;
-				for (int i = 1; i <= info.numPoints; i++)
-				{
-					CollisionDetection::ContactPoint tempPoint;
-					if (i == 1)tempPoint = info.point;
-					else if (i == 2)tempPoint = info.point2;
-					else if (i == 3)tempPoint = info.point3;
-					else if (i == 4)tempPoint = info.point4;
-					point.localA += tempPoint.localA;
-					point.localB += tempPoint.localB;
-					point.normal += tempPoint.normal;
-					point.penetration += tempPoint.penetration;
-				}
-				point.localA /= info.numPoints;
-				point.localB /= info.numPoints;
-				point.normal /= info.numPoints;
-				point.penetration /= info.numPoints;
-
 				if (!(*i)->isTrigger && !(*j)->isTrigger) {
 					NCL::VolumeType typeA = info.a->GetPhysicsObject()->GetCollisionVolume()->type;
 					NCL::VolumeType typeB = info.b->GetPhysicsObject()->GetCollisionVolume()->type;
 					//if (typeA == typeB && typeA == NCL::VolumeType::Sphere)ProjectionResolveCollision(*info.a, *info.b, point);
 					//else	ImpulseResolveCollision(*info.a, *info.b, point);
-					ImpulseResolveCollision(*info.a, *info.b, point);
+					ImpulseResolveCollision(*info.a, *info.b, info.point);
 				}
 				info.framesLeft = numCollisionFrames;
 				allCollisions.insert(info);
@@ -247,6 +227,8 @@ void PhysicsSystem::BasicCollisionDetection() {
 		}
 	}
 }
+
+
 
 void PhysicsSystem::PenaltyResolveCollision(GameObject& a, GameObject& b, CollisionDetection::ContactPoint& p) const {
 	PhysicsObject* physA = a.GetPhysicsObject();
@@ -314,10 +296,26 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 
 	Vector3 fullImpulse = p.normal * j;
 
+
+	
+
+
 	physA->ApplyLinearImpulse(-fullImpulse);
 	physB->ApplyLinearImpulse(fullImpulse);
 	physA->ApplyAngularImpulse(Vector3::Cross(relativeA, -fullImpulse));
 	physB->ApplyAngularImpulse(Vector3::Cross(relativeB, fullImpulse));
+
+	Vector3 tangent = contactVel - (p.normal * Vector3::Dot(contactVel, p.normal));
+	tangent.Normalise();
+	Vector3 inertiaAFriction = Vector3::Cross(physA->GetInertiaTensor() * Vector3::Cross(relativeA, tangent), relativeA);
+	Vector3 inertiaBFriction = Vector3::Cross(physB->GetInertiaTensor() * Vector3::Cross(relativeB, tangent), relativeB);
+	float angularEffectFriction = Vector3::Dot(inertiaAFriction + inertiaBFriction, tangent);
+	float frictionCoeff = 0.2;
+	float jFriction = (-(frictionCoeff * Vector3::Dot(contactVel, tangent)) / (totalMass + angularEffectFriction));
+	fullImpulse = tangent * jFriction;
+
+	physA->ApplyLinearImpulse(-fullImpulse);
+	physB->ApplyLinearImpulse(fullImpulse);
 }
 
 /*

@@ -16,17 +16,22 @@
 #define NUM_MAZE_TARGETS 10
 namespace NCL {
 	namespace CSC8503 {
+		enum class ObjectIDs {
+			player = (int)-2,
+			enemy = (int)-3
+		};
 #pragma region PathfindingObject
 		class PathfindingObject : public StateGameObject {
 		public:
 			PathfindingObject(NavigationGrid* grid, Vector3 startPos, Vector3 endPos,
-				GameObject* player,GameWorld* world, std::vector<GameObject*> mazeTargets);
+				GameObject* player,GameWorld* world, std::vector<GameObject*>* mazeTargets);
 			~PathfindingObject();
 
 			virtual void Update(float dt);
 			bool CanSeePlayer();
 			GameObject* GetNearestMazeTarget(Vector3 from);
-			std::vector<GameObject*> mazeTargets;
+			std::vector<GameObject*>* mazeTargets;
+			void DisplayPathfinding();
 		protected:
 			NavigationPath path;
 			void FollowPath(float dt);
@@ -47,19 +52,22 @@ namespace NCL {
 		class Target : public GameObject {
 		public:
 			Target() {};
-			Target(GameWorld* world,string objectName = "") : GameObject(objectName) {
+			Target(GameWorld* world,int* score,string objectName = "") : GameObject(objectName) {
 				isTrigger = true;
 				this->world = world;
 				deleteOnTrigger = true;
+				this->score = score;
 			};
 			 void OnCollisionBegin(GameObject* otherObject) override {
 				 //std::cout << "triggered";
+				 if (otherObject->GetWorldID() == (int)ObjectIDs::enemy) (*score)++;
 				 if (parentVector != nullptr) {
-					 for (int i = 0; i < parentVector->size(); i++)
-					 {
-						 if (parentVector->at(i) == this) {
-							 parentVector->erase(parentVector->begin() + i);
+					 std::vector<GameObject*>::iterator it = parentVector->begin();
+					 while (it != parentVector->end()) {
+						 if ((*it)->GetTransform().GetPosition() == GetTransform().GetPosition()) {
+							 it = parentVector->erase(it);
 						 }
+						 else it++;
 					 }
 				 };
 				 world->RemoveGameObject(this, true);
@@ -67,6 +75,7 @@ namespace NCL {
 			 }
 			 GameWorld* world;
 			 std::vector<GameObject*>* parentVector;
+			 int* score;
 		};
 
 		enum class Gamemode {
@@ -84,6 +93,7 @@ namespace NCL {
 
 			float camDistance;
 			Vector3 lookAt;
+			int score;
 
 		protected:
 			void InitialiseAssets();
@@ -188,7 +198,7 @@ namespace NCL {
 			GameObject* player;
 
 			Gamemode mode;
-			int score;
+			
 			Target* targets[NUM_TARGETS];
 			Target nearestTarget;
 		};

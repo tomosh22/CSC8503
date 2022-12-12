@@ -22,7 +22,7 @@ using namespace CSC8503;
 
 #pragma region PathfindingObject
 PathfindingObject::PathfindingObject(NavigationGrid* grid, Vector3 startPos,
-	Vector3 endPos,GameObject* player,GameWorld* world, std::vector<GameObject*> mazeTargets) {
+	Vector3 endPos,GameObject* player,GameWorld* world, std::vector<GameObject*>* mazeTargets) {
 	
 	stateMachine = new StateMachine();
 	
@@ -40,21 +40,23 @@ PathfindingObject::PathfindingObject(NavigationGrid* grid, Vector3 startPos,
 	State* movingForward = new State(
 		[&](float dt)->void {
 			//std::cout << dest << ' ' << destWaypoint << '\n';
-			std::cout << *testInt<< '\n';
 			Vector3 position = GetTransform().GetPosition();
-			//std::cout << position << '\n';
+			std::cout << position << '\n';
+			if ((position - destWaypoint).Length() < 5) {
+				finished = path.PopWaypoint(destWaypoint);
+			}
 			if ((position - dest).Length() < 5) {
+				if (this->mazeTargets->size() == 0)return;
 				dest = GetNearestMazeTarget(GetTransform().GetPosition())->GetTransform().GetPosition();
 				this->grid->FindPath(GetTransform().GetPosition(), dest, path);
 				path.PopWaypoint(destWaypoint);
 			}
-			if ((position - destWaypoint).Length() < 5) {
-				finished = path.PopWaypoint(destWaypoint);
-			}
+			
 			GetPhysicsObject()->AddForce((this->destWaypoint - position).Normalised() * 5);
 			time += dt;
 			Debug::DrawLine(dest, dest + Vector3(0, 1, 0),Vector4(0,1,0,1));
 			Debug::DrawLine(destWaypoint, destWaypoint + Vector3(0, 1, 0),Vector4(1,0,0,1));
+			DisplayPathfinding();
 		}
 	);
 	State* chasingPlayer = new State(
@@ -94,19 +96,29 @@ bool PathfindingObject::CanSeePlayer() {
 
 GameObject* NCL::CSC8503::PathfindingObject::GetNearestMazeTarget(Vector3 from)
 {
-	GameObject* target = mazeTargets.at(0);
-		float lowestDist = (from - target->GetTransform().GetPosition()).Length();
-		for (int i = 1; i < mazeTargets.size(); i++)
-		{
-			float dist = (from - mazeTargets.at(i)->GetTransform().GetPosition()).Length();
-			if (dist < lowestDist) {
-				dist = lowestDist;
-				target = mazeTargets[i];
-			}
+	if (mazeTargets->size() == 0)return nullptr;
+	GameObject* target = mazeTargets->at(0);
+	float lowestDist = (from - target->GetTransform().GetPosition()).LengthSquared();
+	for (int i = 1; i < mazeTargets->size(); i++)
+	{
+		float dist = (from - mazeTargets->at(i)->GetTransform().GetPosition()).LengthSquared();
+		if (dist < lowestDist) {
+			lowestDist = dist;
+			target = mazeTargets->at(i);
 		}
-		return target;
+	}
+	target->GetRenderObject()->SetColour(Vector4(1, 0, 0, 1));
+	return target;
 }
 
+void PathfindingObject::DisplayPathfinding() {
+	if (mazeTargets->size() < 2)return;
+	for (int i = 0; i < mazeTargets->size()-1; ++i) {
+		Vector3 a = mazeTargets->at(i)->GetTransform().GetPosition();
+		Vector3 b = mazeTargets->at(i+1)->GetTransform().GetPosition();
+		Debug::DrawLine(a, b, Vector4(0, 1, 0, 1));
+	}
+}
 
 
 //Target* PathfindingObject::GetNearestMazeTarget(Vector3 from) {
@@ -217,6 +229,7 @@ void TutorialGame::UpdateRLCam() {
 }
 
 void TutorialGame::UpdateGame(float dt) {
+	//std::cout << score << '\n';
 	if (!inSelectionMode) {
 		world->GetMainCamera()->UpdateCamera(dt);
 	}
@@ -481,125 +494,30 @@ void TutorialGame::MazeMovement(float dt) {
 	fwdAxis.y = 0.0f;
 	fwdAxis.Normalise();
 
-
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
-		selectionObject->GetPhysicsObject()->AddForce(fwdAxis * 10);
-	}
-
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
-		selectionObject->GetPhysicsObject()->AddForce(-fwdAxis);
-	}
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
-		selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, -1, 0));
-	}
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
-		selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, 1, 0));
-	}
-
 	Quaternion localRotation = selectionObject->GetTransform().GetOrientation();
 	Vector3 localUp = localRotation * Vector3(0, 1, 0);
 	Vector3 localForward = localRotation * Vector3(0, 0, -1);
 	Vector3 localRight = localRotation * Vector3(1, 0, 0);
 
-	XINPUT_STATE state;
-	ZeroMemory(&state, sizeof(XINPUT_STATE));
-	XInputGetState(0, &state);
-
-	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_A)selectionObject->GetPhysicsObject()->ApplyLinearImpulse(localUp);
-	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER)selectionObject->GetPhysicsObject()->AddForce(localForward * 50);
-	float leftTrigger = state.Gamepad.bLeftTrigger;
-	float leftRight = state.Gamepad.bRightTrigger;
-
-	float leftStickX = state.Gamepad.sThumbLX;
-	if (leftStickX > 32767)leftStickX = 32767;
-	if (leftStickX < -32767)leftStickX = -32767;
-
-	float leftStickY = state.Gamepad.sThumbLY;
-	if (leftStickY > 32767)leftStickY = 32767;
-	if (leftStickY < -32767)leftStickY = -32767;
-
-
-
-
-
-	//std::cout << selectionObject->GetPhysicsObject()->GetAngularVelocity() << '\n';
-
-
-	PhysicsObject* phys = selectionObject->GetPhysicsObject();
-	Vector3 angVel = selectionObject->GetTransform().GetOrientation().Conjugate() * phys->GetAngularVelocity();
-
-#pragma region pitch
-	//pitch
-	leftStickY *= -1; //i got the axes the wrong way round... oops
-	if (leftStickY > 10000) {
-		angVel.x += std::lerp((float)0, (float)12.46, leftStickY / 32767) * dt;
-		if (angVel.x > 3.14 * 2)angVel.x = 3.14 * 2;
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
+		selectionObject->GetPhysicsObject()->AddForce(localForward * 20);
 	}
-	else {
-		if (leftStickY < -10000) {
-			angVel.x -= std::lerp((float)0, (float)12.46, -leftStickY / 32767) * dt;
-			if (angVel.x < -3.14 * 2)angVel.x = -3.14 * 2;
-		}
-		else {
-			if (std::fabs(angVel.x) > 0) {
-				if (angVel.x > 0) {
-					angVel.x -= 12.46 * dt;
-					if (angVel.x < 0)angVel.x = 0;
-				}
-				else {
-					angVel.x += 12.46 * dt;
-					if (angVel.x > 0)angVel.x = 0;
-				}
-			}
-		}
 
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
+		selectionObject->GetPhysicsObject()->AddForce(-localForward * 20);
 	}
-#pragma endregion
-
-#pragma region yaw
-	//yaw
-	leftStickX *= -1; //i got the axes the wrong way round... oops
-	if (leftStickX > 10000) {
-		angVel.y += std::lerp((float)0, (float)9.11, leftStickX / 32767) * dt;
-		if (angVel.y > 3.14 * 2)angVel.y = 3.14 * 2;
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
+		selectionObject->GetPhysicsObject()->AddTorque(-localUp * 10);
 	}
-	else {
-		if (leftStickX < -10000) {
-			angVel.y -= std::lerp((float)0, (float)9.11, -leftStickX / 32767) * dt;
-			if (angVel.y < -3.14 * 2)angVel.y = -3.14 * 2;
-		}
-		else {
-			if (std::fabs(angVel.y) > 0) {
-				if (angVel.y > 0) {
-					angVel.y -= 9.11 * dt;
-					if (angVel.y < 0)angVel.y = 0;
-				}
-				else {
-					angVel.y += 9.11 * dt;
-					if (angVel.y > 0)angVel.y = 0;
-				}
-			}
-		}
-
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
+		selectionObject->GetPhysicsObject()->AddTorque(localUp * 10);
 	}
-#pragma endregion
-
-#pragma region roll
-	//roll
-
-	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-		angVel.z += 38.34 * dt;
-		if (angVel.z > 3.14 * 2)angVel.z = 3.14 * 2;
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RETURN)) {
+		selectionObject->GetPhysicsObject()->AddForce(localUp * 50);
 	}
-	else {
-		if (angVel.z > 0) {
-			angVel.z -= 38.34;
-			if (angVel.z < 0)angVel.z = 0;
-		}
-	}
-#pragma endregion
+	
 
-	phys->SetAngularVelocity(selectionObject->GetTransform().GetOrientation() * angVel);
+	
 
 	Debug::DrawLine(selectionObject->GetTransform().GetPosition(), selectionObject->GetTransform().GetPosition() + localForward, Vector4(0, 0, 1, 1));
 	Debug::DrawLine(selectionObject->GetTransform().GetPosition(), selectionObject->GetTransform().GetPosition() + localUp, Vector4(0, 1, 0, 1));
@@ -608,6 +526,9 @@ void TutorialGame::MazeMovement(float dt) {
 }
 
 void TutorialGame::LockedObjectMovement(float dt) {
+	if (mode == Gamemode::rl) { RLMovement(dt); return; }
+	if (mode == Gamemode::maze) { MazeMovement(dt); return; }
+	return;
 	Matrix4 view		= world->GetMainCamera()->BuildViewMatrix();
 	Matrix4 camWorld	= view.Inverse();
 
@@ -843,7 +764,7 @@ void TutorialGame::InitMaze() {
 	Reset();
 	InitDefaultFloor();
 	AddMazeToWorld();
-	player = AddPlayerToWorld(Vector3(80,10,45));
+	player = AddPlayerToWorld(Vector3(80,0,45));
 	player->GetRenderObject()->SetColour(Vector4(1, 0.6, 1, 1));
 	pathfinder = AddPathfindingObjectToWorld();
 	lockedObject = player;
@@ -871,7 +792,7 @@ void TutorialGame::InitWorld() {
 	//InitDefaultFloor();
 
 	//BridgeConstraintTest();
-	//HingeTest();
+	HingeTest(Vector3(),1);
 
 	//AddMazeToWorld();
 	//testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
@@ -901,15 +822,20 @@ void TutorialGame::AddMazeToWorld() {
 			n.position = Vector3((float)(x * nodeSize), 0, (float)(y * nodeSize));
 			std::cout << type << '\n';
 			if (type == 120)mazeAABBs.emplace_back(AddCubeToWorld(n.position, { (float)nodeSize / 2,(float)nodeSize / 2,(float)nodeSize / 2 }, 0));
-			//else if (type == 103)HingeTest(n.position, nodeSize);
-			else if (rand() % 10 == 0)mazeTargets.emplace_back( (GameObject*)AddTargetToWorld(n.position,&mazeTargets));
+			else if (type == 103)HingeTest(n.position, nodeSize);
+			else if (rand() % 10 == 0) { 
+				if (n.position == Vector3(0, 0, 0)) {
+					std::cout << "eh?\n";
+				}
+				mazeTargets.emplace_back((GameObject*)AddTargetToWorld(n.position, &mazeTargets));
+			}
 		}
 	}
 	return;
 }
 
 Target* TutorialGame::AddTargetToWorld(const Vector3& position, std::vector<GameObject*>* parentVector) {
-	Target* sphere = new Target(this->world);
+	Target* sphere = new Target(this->world,&score);
 	float radius = 1;
 
 
@@ -1067,7 +993,7 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 
 	GameObject* character = new GameObject();
 	SphereVolume* volume  = new SphereVolume(meshSize);
-	//OBBVolume* volume = new OBBVolume(Vector3(1, 1, 3));
+	//OBBVolume* volume = new OBBVolume(Vector3(1, 1, 1)*meshSize/2);
 
 	character->SetBoundingVolume((CollisionVolume*)volume);
 
@@ -1081,9 +1007,8 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
 	character->GetPhysicsObject()->InitSphereInertia();
 
-	character->SetWorldID(999);
 
-	world->AddGameObject(character,999);
+	world->AddGameObject(character,(int)ObjectIDs::player);
 
 	return character;
 }
@@ -1155,7 +1080,7 @@ StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position) {
 PathfindingObject* TutorialGame::AddPathfindingObjectToWorld() {
 	Vector3 startPos(80, 0, 10);
 	Vector3 endPos(80, 0, 80);
-	PathfindingObject* apple = new PathfindingObject(grid,startPos,endPos,player,world,mazeTargets);
+	PathfindingObject* apple = new PathfindingObject(grid,startPos,endPos,player,world,&mazeTargets);
 	float radius = 5;
 	SphereVolume* volume = new SphereVolume(radius);
 	apple->SetBoundingVolume((CollisionVolume*)volume);
@@ -1171,7 +1096,7 @@ PathfindingObject* TutorialGame::AddPathfindingObjectToWorld() {
 	
 	
 
-	world->AddGameObject(apple,9999);
+	world->AddGameObject(apple,(int)ObjectIDs::enemy);
 
 	return apple;
 }
@@ -1254,16 +1179,22 @@ void TutorialGame::BridgeConstraintTest() {
 }
 
 void TutorialGame::HingeTest(Vector3 position, int nodeSize) {
-	Vector3 doorSize = Vector3(3, 2, 0.1);
-	GameObject* door = AddOBBToWorld(position - Vector3(nodeSize/2 - 3.5, 0, 0), doorSize, 5);
+	Vector3 doorSize = Vector3(4, nodeSize/2, 0.1);
+	GameObject* door = AddCubeToWorld(position + Vector3(0, nodeSize / 2, 0), doorSize, 10);
 
-	GameObject* hinge = AddCubeToWorld(position - Vector3(nodeSize,0,0), Vector3(1, 1, 1), 0);
+	/*GameObject* hinge0 = AddCubeToWorld(position + Vector3(-nodeSize/2,nodeSize/2,0), Vector3(1, 1, 1), 0);
+	GameObject* hinge1 = AddCubeToWorld(position + Vector3(nodeSize/2,nodeSize/2,0), Vector3(1, 1, 1), 0);*/
+
+	GameObject* hinge0 = AddCubeToWorld(position + Vector3(0, nodeSize, 0), Vector3(nodeSize/2, 1, 1), 0);
 	
-	OrientationConstraint* constraint1 = new OrientationConstraint(door, hinge, Vector3(0, 1, 0));
-	//world->AddConstraint(constraint1);
+	OrientationConstraint* constraint1 = new OrientationConstraint(door, hinge0, Vector3(0, 1, 0));
+	world->AddConstraint(constraint1);
 
-	PositionConstraint* constraint3 = new PositionConstraint(door, hinge,10);
-	//world->AddConstraint(constraint3);
+	PositionConstraint* constraint2 = new PositionConstraint(door, hinge0,nodeSize*1.5);
+	world->AddConstraint(constraint2);
+
+	/*PositionConstraint* constraint3 = new PositionConstraint(door, hinge1, nodeSize);
+	world->AddConstraint(constraint3);*/
 }
 
 /*
