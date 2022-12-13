@@ -16,6 +16,7 @@ GameObject::GameObject(string objectName)	{
 	networkObject	= nullptr;
 	isTrigger = false;
 	deleteOnTrigger = false;
+	affectedByFriction = true;
 }
 
 GameObject::~GameObject()	{

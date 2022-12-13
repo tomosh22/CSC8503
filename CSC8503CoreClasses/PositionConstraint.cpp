@@ -28,7 +28,7 @@ PositionConstraint::~PositionConstraint()
 void PositionConstraint::UpdateConstraint(float dt)	{
 	Vector3 relativePos = objectA->GetTransform().GetPosition() - objectB->GetTransform().GetPosition();
 	float currentDistance = relativePos.Length();
-	if (currentDistance > distance) {
+	if (currentDistance <= distance) {  return; }
 		float offset = distance - currentDistance;
 		if (abs(offset) > 0) {
 			Vector3 offsetDir = relativePos.Normalised();
@@ -51,10 +51,10 @@ void PositionConstraint::UpdateConstraint(float dt)	{
 				physA->ApplyLinearImpulse(aImpulse);
 				physB->ApplyLinearImpulse(bImpulse);
 			}
-		}
+		
 	}
 
-	float relativeXPos = objectA->GetTransform().GetPosition().x - objectB->GetTransform().GetPosition().x;
+	/*float relativeXPos = objectA->GetTransform().GetPosition().x - objectB->GetTransform().GetPosition().x;
 	if (relativeXPos == 0)return;
 	PhysicsObject* physA = objectA->GetPhysicsObject();
 	PhysicsObject* physB = objectB->GetPhysicsObject();
@@ -73,6 +73,6 @@ void PositionConstraint::UpdateConstraint(float dt)	{
 
 		physA->ApplyLinearImpulse(aImpulse);
 		physB->ApplyLinearImpulse(bImpulse);
-	}
+	}*/
 
 }

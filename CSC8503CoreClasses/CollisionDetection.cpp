@@ -328,7 +328,6 @@ bool  CollisionDetection::OBBSphereIntersection(const OBBVolume& volumeA, const 
 	blankTransform.SetPosition(Vector3());
 
 	if (AABBSphereIntersection(tempAABB, blankTransform, volumeB, tempTransform, collisionInfo)) {
-		collisionInfo.point.normal = worldTransformA.GetOrientation() * collisionInfo.point.normal;
 		collisionInfo.point.localA = worldTransformA.GetOrientation() * collisionInfo.point.localA;
 		collisionInfo.point.localB = worldTransformA.GetOrientation() * collisionInfo.point.localB;
 		return true;

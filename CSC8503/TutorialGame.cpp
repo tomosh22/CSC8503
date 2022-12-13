@@ -22,7 +22,7 @@ using namespace CSC8503;
 
 #pragma region PathfindingObject
 PathfindingObject::PathfindingObject(NavigationGrid* grid, Vector3 startPos,
-	Vector3 endPos,GameObject* player,GameWorld* world, std::vector<GameObject*>* mazeTargets) {
+	Vector3 endPos,GameObject* player,GameWorld* world, std::vector<Target*>* mazeTargets) {
 	
 	stateMachine = new StateMachine();
 	
@@ -41,7 +41,7 @@ PathfindingObject::PathfindingObject(NavigationGrid* grid, Vector3 startPos,
 		[&](float dt)->void {
 			//std::cout << dest << ' ' << destWaypoint << '\n';
 			Vector3 position = GetTransform().GetPosition();
-			std::cout << position << '\n';
+			//std::cout << position << '\n';
 			if ((position - destWaypoint).Length() < 5) {
 				finished = path.PopWaypoint(destWaypoint);
 			}
@@ -94,10 +94,10 @@ bool PathfindingObject::CanSeePlayer() {
 
 }
 
-GameObject* NCL::CSC8503::PathfindingObject::GetNearestMazeTarget(Vector3 from)
+Target* NCL::CSC8503::PathfindingObject::GetNearestMazeTarget(Vector3 from)
 {
 	if (mazeTargets->size() == 0)return nullptr;
-	GameObject* target = mazeTargets->at(0);
+	Target* target = mazeTargets->at(0);
 	float lowestDist = (from - target->GetTransform().GetPosition()).LengthSquared();
 	for (int i = 1; i < mazeTargets->size(); i++)
 	{
@@ -228,8 +228,19 @@ void TutorialGame::UpdateRLCam() {
 	world->GetMainCamera()->SetYaw(angles.y);
 }
 
+void TutorialGame::UpdateMaze(float dt) {
+	Debug::Print("Score "+std::to_string(score), Vector2(5,5));
+	if (mazeTargets.size() == 0) {
+		if (score == 0)std::cout << "draw";
+		else std::cout << ((score > 0) ? "win" : "lose");
+	}
+	player->UpdatePowerUps(dt);
+	std::cout << player->affectedByFriction << '\n';
+
+}
+
 void TutorialGame::UpdateGame(float dt) {
-	//std::cout << score << '\n';
+	if (mode == Gamemode::maze)UpdateMaze(dt);
 	if (!inSelectionMode) {
 		world->GetMainCamera()->UpdateCamera(dt);
 	}
@@ -500,17 +511,17 @@ void TutorialGame::MazeMovement(float dt) {
 	Vector3 localRight = localRotation * Vector3(1, 0, 0);
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
-		selectionObject->GetPhysicsObject()->AddForce(localForward * 20);
+		selectionObject->GetPhysicsObject()->AddForce(localForward * 100);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
-		selectionObject->GetPhysicsObject()->AddForce(-localForward * 20);
+		selectionObject->GetPhysicsObject()->AddForce(-localForward * 100);
 	}
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
-		selectionObject->GetPhysicsObject()->AddTorque(-localUp * 10);
+		selectionObject->GetPhysicsObject()->AddTorque(-localUp * 100);
 	}
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
-		selectionObject->GetPhysicsObject()->AddTorque(localUp * 10);
+		selectionObject->GetPhysicsObject()->AddTorque(localUp * 100);
 	}
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RETURN)) {
 		selectionObject->GetPhysicsObject()->AddForce(localUp * 50);
@@ -780,7 +791,7 @@ void TutorialGame::InitWorld() {
 	selectionObject = lockedObject;
 	mode = Gamemode::normal;
 
-	//InitMixedGridWorld(15, 15, 3.5f, 3.5f);
+	InitMixedGridWorld(15, 15, 3.5f, 3.5f);
 	
 	//AddOBBToWorld(Vector3(-25,0,-30),Vector3(1,1,1)*5);
 	//AddOBBToWorld(Vector3(-25,0,-10), Vector3(1, 1, 1)*5);
@@ -827,15 +838,42 @@ void TutorialGame::AddMazeToWorld() {
 				if (n.position == Vector3(0, 0, 0)) {
 					std::cout << "eh?\n";
 				}
-				mazeTargets.emplace_back((GameObject*)AddTargetToWorld(n.position, &mazeTargets));
+				mazeTargets.emplace_back(AddFrictionTargetToWorld(n.position, &mazeTargets));
 			}
 		}
 	}
 	return;
 }
 
-Target* TutorialGame::AddTargetToWorld(const Vector3& position, std::vector<GameObject*>* parentVector) {
-	Target* sphere = new Target(this->world,&score);
+Target* TutorialGame::AddTargetToWorld(const Vector3& position, std::vector<Target*>* parentVector) {
+	Target* sphere = new Target(this->world,&score,parentVector);
+	float radius = 1;
+
+
+	Vector3 sphereSize = Vector3(radius, radius, radius);
+	SphereVolume* volume = new SphereVolume(radius);
+	sphere->SetBoundingVolume((CollisionVolume*)volume);
+
+	sphere->GetTransform()
+		.SetScale(sphereSize)
+		.SetPosition(position);
+
+	sphere->SetRenderObject(new RenderObject(&sphere->GetTransform(), sphereMesh, basicTex, basicShader));
+	sphere->SetPhysicsObject(new PhysicsObject(&sphere->GetTransform(), sphere->GetBoundingVolume()));
+
+	sphere->GetPhysicsObject()->SetInverseMass(0);
+	sphere->GetPhysicsObject()->InitSphereInertia();
+
+
+	world->AddGameObject(sphere);
+	
+	
+
+	return sphere;
+}
+
+FrictionTarget* TutorialGame::AddFrictionTargetToWorld(const Vector3& position, std::vector<Target*>* parentVector) {
+	FrictionTarget* sphere = new FrictionTarget(this->world, &score,parentVector);
 	float radius = 1;
 
 
@@ -856,8 +894,8 @@ Target* TutorialGame::AddTargetToWorld(const Vector3& position, std::vector<Game
 	sphere->parentVector = parentVector;
 
 	world->AddGameObject(sphere);
-	
-	
+
+
 
 	return sphere;
 }
@@ -987,11 +1025,11 @@ GameObject* TutorialGame::AddOBBToWorld(const Vector3& position, Vector3 dimensi
 	return cube;
 }
 
-GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
+Player* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	float meshSize		= 5;
 	float inverseMass	= 0.5f;
 
-	GameObject* character = new GameObject();
+	Player* character = new Player();
 	//SphereVolume* volume  = new SphereVolume(meshSize);
 	OBBVolume* volume = new OBBVolume(Vector3(1, 1, 1)*meshSize/2);
 
@@ -1179,24 +1217,18 @@ void TutorialGame::BridgeConstraintTest() {
 }
 
 void TutorialGame::HingeTest(Vector3 position, int nodeSize) {
-	Vector3 doorSize = Vector3(4, nodeSize/2, 0.1);
-	GameObject* door = AddCubeToWorld(position + Vector3(0, nodeSize / 2, 0), doorSize, 10);
+	nodeSize = 10;
+	Vector3 doorSize = Vector3(3, 2, 0.1);
+	GameObject* door = AddOBBToWorld(position - Vector3(nodeSize / 2, 0, 0), doorSize, 0.5);
 
-	/*GameObject* hinge0 = AddCubeToWorld(position + Vector3(-nodeSize/2,nodeSize/2,0), Vector3(1, 1, 1), 0);
-	GameObject* hinge1 = AddCubeToWorld(position + Vector3(nodeSize/2,nodeSize/2,0), Vector3(1, 1, 1), 0);*/
+	GameObject* hinge = AddCubeToWorld(position - Vector3(nodeSize, 0, 0), Vector3(1, 1, 1), 0);
 
-	GameObject* hinge0 = AddCubeToWorld(position + Vector3(0, nodeSize, 0), Vector3(nodeSize/2, 1, 1), 0);
-	
-	OrientationConstraint* constraint1 = new OrientationConstraint(door, hinge0, Vector3(0, 1, 0));
+	OrientationConstraint* constraint1 = new OrientationConstraint(door, hinge, Vector3(0, 1, 0));
 	world->AddConstraint(constraint1);
 
-	PositionConstraint* constraint2 = new PositionConstraint(door, hinge0,nodeSize*1.5);
-	world->AddConstraint(constraint2);
-
-	/*PositionConstraint* constraint3 = new PositionConstraint(door, hinge1, nodeSize);
-	world->AddConstraint(constraint3);*/
+	PositionConstraint* constraint3 = new PositionConstraint(door, hinge, 10);
+	world->AddConstraint(constraint3);
 }
-
 /*
 Every frame, this code will let you perform a raycast, to see if there's an object
 underneath the cursor, and if so 'select it' into a pointer, so that it can be 

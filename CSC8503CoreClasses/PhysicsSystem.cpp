@@ -238,10 +238,10 @@ void PhysicsSystem::PenaltyResolveCollision(GameObject& a, GameObject& b, Collis
 
 	Vector3 direction = p.normal * p.penetration;
 
-	physA->AddForce(-direction * 5);
-	physB->AddForce(direction * 5);
+	physA->AddForce(-direction * 500);
+	physB->AddForce(direction * 500);
 	
-	std::cout << "collided " + std::to_string(p.penetration) + '\n';
+	//std::cout << "collided " + std::to_string(p.penetration) + '\n';
 
 }
 
@@ -305,17 +305,20 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	physA->ApplyAngularImpulse(Vector3::Cross(relativeA, -fullImpulse));
 	physB->ApplyAngularImpulse(Vector3::Cross(relativeB, fullImpulse));
 
-	Vector3 tangent = contactVel - (p.normal * Vector3::Dot(contactVel, p.normal));
+	if (a.affectedByFriction || b.affectedByFriction) {
+		Vector3 tangent = contactVel - (p.normal * Vector3::Dot(contactVel, p.normal));
 	tangent.Normalise();
 	Vector3 inertiaAFriction = Vector3::Cross(physA->GetInertiaTensor() * Vector3::Cross(relativeA, tangent), relativeA);
 	Vector3 inertiaBFriction = Vector3::Cross(physB->GetInertiaTensor() * Vector3::Cross(relativeB, tangent), relativeB);
 	float angularEffectFriction = Vector3::Dot(inertiaAFriction + inertiaBFriction, tangent);
-	float frictionCoeff = 0.2;
+	float frictionCoeff = 0.5;
 	float jFriction = (-(frictionCoeff * Vector3::Dot(contactVel, tangent)) / (totalMass + angularEffectFriction));
 	fullImpulse = tangent * jFriction;
 
-	physA->ApplyLinearImpulse(-fullImpulse);
-	physB->ApplyLinearImpulse(fullImpulse);
+	if(a.affectedByFriction)physA->ApplyLinearImpulse(-fullImpulse);
+	if(b.affectedByFriction)physB->ApplyLinearImpulse(fullImpulse);
+	}
+	
 }
 
 /*

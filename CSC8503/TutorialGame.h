@@ -20,17 +20,110 @@ namespace NCL {
 			player = (int)-2,
 			enemy = (int)-3
 		};
+
+		
+
+		class PowerUp {
+		public:
+			std::function<void(GameObject*)> startFunc;
+			std::function<void(GameObject*)> endFunc;
+			float timeLeft;
+		};
+		class FrictionPowerUp : public PowerUp {
+		public:
+			FrictionPowerUp(GameObject* player) {
+				startFunc = [&](GameObject* player)->void {
+					player->affectedByFriction = false;
+				};
+				endFunc = [&](GameObject* player)->void {
+					player->affectedByFriction = true;
+				};
+			}
+		};
+
+		class Player : public GameObject {
+		public:
+			std::vector<PowerUp*> powerUps;
+			void AddPowerUp(PowerUp* powerUp, float duration) {
+				powerUp->startFunc(this);
+				powerUp->timeLeft = duration;
+				powerUps.push_back(powerUp);
+			}
+			void UpdatePowerUps(float dt) {
+				std::vector<PowerUp*>::iterator it = powerUps.begin();
+				while (it != powerUps.end()) {
+					(*it)->timeLeft -= dt;
+					if ((*it)->timeLeft <= 0) {
+						(*it)->endFunc(this);
+						it = powerUps.erase(it);
+					}
+					else it++;
+				}
+			}
+		};
+
+#pragma region targets
+		
+
+		class Target : public GameObject {
+		public:
+			Target() {};
+			Target(GameWorld* world,int* score,std::vector<Target*>* parentVector, string objectName = "") : GameObject(objectName) {
+				this->isTrigger = true;
+				this->world = world;
+				this->deleteOnTrigger = true;
+				this->score = score;
+				this->parentVector = parentVector;
+			};
+			 virtual void OnCollisionBegin(GameObject* otherObject) override {
+				 //std::cout << "triggered";
+				 if (otherObject->GetWorldID() == (int)ObjectIDs::player) (*score)++;
+				 if (otherObject->GetWorldID() == (int)ObjectIDs::enemy) (*score)--;
+				 if (parentVector != nullptr)DestroySelf();
+			 }
+
+			 void DestroySelf() {
+				 std::vector<Target*>::iterator it = parentVector->begin();
+				 while (it != parentVector->end()) {
+					 if ((*it) == this) {
+						 it = parentVector->erase(it);
+					 }
+					 else it++;
+				 }
+				 world->RemoveGameObject(this, true);
+			 }
+			 GameWorld* world;
+			 std::vector<Target*>* parentVector;
+			 int* score;
+		};
+		class FrictionTarget : public Target {
+		public:
+			FrictionTarget(GameWorld* world, int* score, std::vector<Target*>* parentVector, string objectName = "") : Target(world, score, parentVector, objectName) {
+
+			};
+			void OnCollisionBegin(GameObject* otherObject) override {
+				if (otherObject->GetWorldID() == (int)ObjectIDs::player || otherObject->GetWorldID() == (int)ObjectIDs::player) {
+					FrictionPowerUp* powerUp = new FrictionPowerUp(otherObject);
+					powerUp->startFunc(otherObject);
+					((Player*)otherObject)->AddPowerUp((PowerUp*)powerUp, 5);
+				}
+				DestroySelf();
+			}
+		};
+		
+#pragma endregion
+
 #pragma region PathfindingObject
 		class PathfindingObject : public StateGameObject {
 		public:
 			PathfindingObject(NavigationGrid* grid, Vector3 startPos, Vector3 endPos,
-				GameObject* player,GameWorld* world, std::vector<GameObject*>* mazeTargets);
+				GameObject* player, GameWorld* world, std::vector<Target*>* mazeTargets);
 			~PathfindingObject();
 
 			virtual void Update(float dt);
 			bool CanSeePlayer();
-			GameObject* GetNearestMazeTarget(Vector3 from);
-			std::vector<GameObject*>* mazeTargets;
+			Target* GetNearestMazeTarget(Vector3 from);
+			std::vector<Target*>* mazeTargets;
 			void DisplayPathfinding();
 		protected:
 			NavigationPath path;
@@ -44,39 +137,11 @@ namespace NCL {
 			GameWorld* world;
 			NavigationGrid* grid;
 			int* testInt = new int(123456);
-			
-			
+
+
 		};
 #pragma endregion
 
-		class Target : public GameObject {
-		public:
-			Target() {};
-			Target(GameWorld* world,int* score,string objectName = "") : GameObject(objectName) {
-				isTrigger = true;
-				this->world = world;
-				deleteOnTrigger = true;
-				this->score = score;
-			};
-			 void OnCollisionBegin(GameObject* otherObject) override {
-				 //std::cout << "triggered";
-				 if (otherObject->GetWorldID() == (int)ObjectIDs::enemy) (*score)++;
-				 if (parentVector != nullptr) {
-					 std::vector<GameObject*>::iterator it = parentVector->begin();
-					 while (it != parentVector->end()) {
-						 if ((*it)->GetTransform().GetPosition() == GetTransform().GetPosition()) {
-							 it = parentVector->erase(it);
-						 }
-						 else it++;
-					 }
-				 };
-				 world->RemoveGameObject(this, true);
-				 
-			 }
-			 GameWorld* world;
-			 std::vector<GameObject*>* parentVector;
-			 int* score;
-		};
 
 		enum class Gamemode {
 			normal,maze,rl
@@ -107,6 +172,7 @@ namespace NCL {
 			void InitRL();
 			void InitMaze();
 			void MazeMovement(float dt);
+			void UpdateMaze(float dt);
 			void InitWorld();
 
 			/*
@@ -139,12 +205,13 @@ namespace NCL {
 			GameObject* AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
 			GameObject* AddOBBToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
 
-			GameObject* AddPlayerToWorld(const Vector3& position);
+			Player* AddPlayerToWorld(const Vector3& position);
 			GameObject* AddEnemyToWorld(const Vector3& position);
 			GameObject* AddBonusToWorld(const Vector3& position);
 
 			GameObject* AddCarToWorld(const Vector3& position);
-			Target* AddTargetToWorld(const Vector3& position, std::vector<GameObject*>* parentVector = nullptr);
+			Target* AddTargetToWorld(const Vector3& position, std::vector<Target*>* parentVector = nullptr);
+			FrictionTarget* AddFrictionTargetToWorld(const Vector3& position, std::vector<Target*>* parentVector = nullptr);
 			void GenerateTargets();
 			Target* GetNearestTarget();
 			
@@ -191,11 +258,11 @@ namespace NCL {
 			StateGameObject* testStateObject;
 
 			std::vector<GameObject*> mazeAABBs;
-			std::vector<GameObject*> mazeTargets;
+			std::vector<Target*> mazeTargets;
 			int targetIndex;
 			PathfindingObject* pathfinder = nullptr;
 
-			GameObject* player;
+			Player* player;
 
 			Gamemode mode;
 			

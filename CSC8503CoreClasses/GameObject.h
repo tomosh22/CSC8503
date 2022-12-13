@@ -2,6 +2,7 @@
 #include "Transform.h"
 #include "CollisionVolume.h"
 
+
 using std::vector;
 
 namespace NCL::CSC8503 {
@@ -75,6 +76,7 @@ namespace NCL::CSC8503 {
 		}
 		bool isTrigger;
 		bool deleteOnTrigger;
+		bool affectedByFriction;
 		
 	protected:
 		Transform			transform;
@@ -94,5 +96,12 @@ namespace NCL::CSC8503 {
 
 		
 	};
+	
+	
+	
+	
+	
+
+	
 }
 
