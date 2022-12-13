@@ -321,6 +321,7 @@ bool  CollisionDetection::OBBSphereIntersection(const OBBVolume& volumeA, const 
 	tempTransform.SetPosition(deltaPos);
 
 	
+	//tempTransform.SetPosition(worldTransformA.GetOrientation().Conjugate() * deltaPos);
 
 	AABBVolume tempAABB(volumeA.GetHalfDimensions());
 	Transform blankTransform;
@@ -338,13 +339,10 @@ bool  CollisionDetection::OBBSphereIntersection(const OBBVolume& volumeA, const 
 bool  CollisionDetection::OBBAABBIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
 	const AABBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
 
-	//OBBVolume tempVolume = OBBVolume(volumeB.GetHalfDimensions());
-	if (OBBIntersection(volumeA, worldTransformA, (OBBVolume&) volumeB, worldTransformB, collisionInfo)) {
-		//collisionInfo.point.normal = worldTransformB.GetOrientation() * Vector3(0, -1, 0);
-		//collisionInfo.point.localB = Vector3();
+	if (OBBIntersection(volumeA, worldTransformA, (OBBVolume&)volumeB, worldTransformB, collisionInfo)) {
+		collisionInfo.point.localB = Vector3();
 		return true;
 	}
-		
 	return false;
 }
 
@@ -393,14 +391,14 @@ bool CollisionDetection::SAT(const Vector3 delta, Vector3 plane, const Transform
 	bool result = deltaPlaneDot <= rest;
 	if (result) {
 		float delta2 = rest - deltaPlaneDot;
-		if (delta2 < penDistance && plane.LengthSquared() > 0.1) {
+		if (delta2 < penDistance && plane.LengthSquared() > 0) {
 			penDistance = delta2;
-			normal = plane;
+			
 
 			if (Vector3::Dot(plane, delta) < 0) {
 				plane *= -1;
 			}
-
+			normal = plane;
 			pointA = OBBSupport(worldTransformA,plane);
 			pointB = OBBSupport(worldTransformB, -plane);
 		}

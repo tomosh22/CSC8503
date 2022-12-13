@@ -821,7 +821,7 @@ void TutorialGame::AddMazeToWorld() {
 			n.type = type;
 			n.position = Vector3((float)(x * nodeSize), 0, (float)(y * nodeSize));
 			std::cout << type << '\n';
-			if (type == 120)mazeAABBs.emplace_back(AddCubeToWorld(n.position, { (float)nodeSize / 2,(float)nodeSize / 2,(float)nodeSize / 2 }, 0));
+			if (type == 120)mazeAABBs.emplace_back(AddCubeToWorld(n.position, { (float)nodeSize / 2,(float)nodeSize / 2,(float)nodeSize / 2 }, 0.5));
 			else if (type == 103)HingeTest(n.position, nodeSize);
 			else if (rand() % 10 == 0) { 
 				if (n.position == Vector3(0, 0, 0)) {
@@ -992,8 +992,8 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	float inverseMass	= 0.5f;
 
 	GameObject* character = new GameObject();
-	SphereVolume* volume  = new SphereVolume(meshSize);
-	//OBBVolume* volume = new OBBVolume(Vector3(1, 1, 1)*meshSize/2);
+	//SphereVolume* volume  = new SphereVolume(meshSize);
+	OBBVolume* volume = new OBBVolume(Vector3(1, 1, 1)*meshSize/2);
 
 	character->SetBoundingVolume((CollisionVolume*)volume);
 
@@ -1005,7 +1005,7 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
-	character->GetPhysicsObject()->InitSphereInertia();
+	character->GetPhysicsObject()->InitCubeInertia();
 
 
 	world->AddGameObject(character,(int)ObjectIDs::player);
