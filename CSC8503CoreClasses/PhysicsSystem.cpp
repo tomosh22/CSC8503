@@ -314,8 +314,8 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	float jFriction = (-(frictionCoeff * Vector3::Dot(contactVel, tangent)) / (totalMass + angularEffectFriction));
 	fullImpulse = tangent * jFriction;
 
-	//physA->ApplyLinearImpulse(-fullImpulse);
-	//physB->ApplyLinearImpulse(fullImpulse);
+	physA->ApplyLinearImpulse(-fullImpulse);
+	physB->ApplyLinearImpulse(fullImpulse);
 }
 
 /*
