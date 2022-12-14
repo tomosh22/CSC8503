@@ -19,6 +19,15 @@ namespace NCL {
 	class CollisionDetection
 	{
 	public:
+		struct CapsuleParts {
+			Vector3 localUp;
+			Transform topTransform;
+			Transform midTransform;
+			Transform bottomTransform;
+			SphereVolume sphereVol;
+			OBBVolume obbVol;
+			CapsuleParts() {};
+		};
 		struct ContactPoint {
 			Vector3 localA;
 			Vector3 localB;
@@ -85,6 +94,8 @@ namespace NCL {
 			}
 		};
 
+		static CapsuleParts GetCapsuleParts(const Transform& worldTransform, const CapsuleVolume& volume);
+
 		static Vector3 OBBSupport(const Transform& worldTransform, Vector3 worldDir);
 
 		static bool SAT(const Vector3 delta, const Vector3 plane, const Transform& worldTransformA,
@@ -125,9 +136,14 @@ namespace NCL {
 
 		static bool SphereIntersection(	const SphereVolume& volumeA, const Transform& worldTransformA,
 										const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
+		static bool CapsuleIntersection(const CapsuleVolume& volumeA, const Transform& worldTransformA,
+										const CapsuleVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
 
 		static bool AABBSphereIntersection(	const AABBVolume& volumeA	 , const Transform& worldTransformA,
 										const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
+
+		static bool AABBSphereIntersectionSwapped(const SphereVolume& volumeA, const Transform& worldTransformA,
+			const AABBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
 
 		static bool OBBIntersection(	const OBBVolume& volumeA, const Transform& worldTransformA,
 										const OBBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);

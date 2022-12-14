@@ -23,27 +23,14 @@ namespace NCL {
 
 		
 
-		class PowerUp {
-		public:
-			std::function<void(GameObject*)> startFunc;
-			std::function<void(GameObject*)> endFunc;
-			float timeLeft;
-		};
-		class FrictionPowerUp : public PowerUp {
-		public:
-			FrictionPowerUp(GameObject* player) {
-				startFunc = [&](GameObject* player)->void {
-					player->affectedByFriction = false;
-				};
-				endFunc = [&](GameObject* player)->void {
-					player->affectedByFriction = true;
-				};
-			}
-		};
+		
 
 		class Player : public GameObject {
 		public:
-			std::vector<PowerUp*> powerUps;
+			Player() : GameObject() {
+				frictionTime = 0;
+			};
+			/*std::vector<PowerUp*> powerUps;
 			void AddPowerUp(PowerUp* powerUp, float duration) {
 				powerUp->startFunc(this);
 				powerUp->timeLeft = duration;
@@ -59,6 +46,36 @@ namespace NCL {
 					}
 					else it++;
 				}
+			}*/
+			float frictionTime;
+			void UpdateFrictionTime(float dt) {
+				frictionTime -= dt;
+				if (frictionTime <= 0) {
+					frictionTime = 0;
+					affectedByFriction = true;
+				}
+			}
+		};
+
+		class PowerUp {
+		public:
+			std::function<void(Player*)> startFunc;
+			std::function<void(Player*)> endFunc;
+			float timeLeft;
+		};
+		class FrictionPowerUp : public PowerUp {
+		public:
+			FrictionPowerUp(Player* player) {
+				startFunc = [&](Player* player)->void {
+					player->affectedByFriction = false;
+					player->frictionTime = 5;
+				};
+				/*startFunc = [&](GameObject* player)->void {
+					player->affectedByFriction = false;
+				};
+				endFunc = [&](GameObject* player)->void {
+					player->affectedByFriction = true;
+				};*/
 			}
 		};
 
@@ -83,12 +100,14 @@ namespace NCL {
 			 }
 
 			 void DestroySelf() {
-				 std::vector<Target*>::iterator it = parentVector->begin();
-				 while (it != parentVector->end()) {
-					 if ((*it) == this) {
-						 it = parentVector->erase(it);
+				 if (parentVector != nullptr) {
+					 std::vector<Target*>::iterator it = parentVector->begin();
+					 while (it != parentVector->end()) {
+						 if ((*it) == this) {
+							 it = parentVector->erase(it);
+						 }
+						 else it++;
 					 }
-					 else it++;
 				 }
 				 world->RemoveGameObject(this, true);
 			 }
@@ -103,9 +122,9 @@ namespace NCL {
 			};
 			void OnCollisionBegin(GameObject* otherObject) override {
 				if (otherObject->GetWorldID() == (int)ObjectIDs::player || otherObject->GetWorldID() == (int)ObjectIDs::player) {
-					FrictionPowerUp* powerUp = new FrictionPowerUp(otherObject);
-					powerUp->startFunc(otherObject);
-					((Player*)otherObject)->AddPowerUp((PowerUp*)powerUp, 5);
+					FrictionPowerUp* powerUp = new FrictionPowerUp((Player*)otherObject);
+					powerUp->startFunc((Player*)otherObject);
+					//((Player*)otherObject)->AddPowerUp((PowerUp*)powerUp, 5);
 				}
 				DestroySelf();
 			}
@@ -116,7 +135,7 @@ namespace NCL {
 #pragma region PathfindingObject
 		class PathfindingObject : public StateGameObject {
 		public:
-			PathfindingObject(NavigationGrid* grid, Vector3 startPos, Vector3 endPos,
+			PathfindingObject(NavigationGrid* grid, Vector3 startPos, 
 				GameObject* player, GameWorld* world, std::vector<Target*>* mazeTargets);
 			~PathfindingObject();
 
@@ -202,6 +221,7 @@ namespace NCL {
 
 			GameObject* AddFloorToWorld(const Vector3& position);
 			GameObject* AddSphereToWorld(const Vector3& position, float radius, float inverseMass = 10.0f);
+			GameObject* AddCapsuleToWorld(const Vector3& position, float radius,float halfHeight, float inverseMass = 10.0f);
 			GameObject* AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
 			GameObject* AddOBBToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
 
@@ -254,7 +274,7 @@ namespace NCL {
 			GameObject* objClosest = nullptr;
 
 			StateGameObject* AddStateObjectToWorld(const Vector3& position);
-			PathfindingObject* AddPathfindingObjectToWorld();
+			PathfindingObject* AddPathfindingObjectToWorld(const Vector3& pos);
 			StateGameObject* testStateObject;
 
 			std::vector<GameObject*> mazeAABBs;

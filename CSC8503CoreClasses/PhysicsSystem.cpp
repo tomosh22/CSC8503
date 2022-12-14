@@ -349,9 +349,11 @@ void PhysicsSystem::BroadPhase() {
 			{
 				for (auto j = std::next(i); j != data.end(); j++)
 				{
+					
 					info.a = std::min((*i).object, (*j).object);
 					info.b = std::max((*i).object, (*j).object);
 					broadphaseCollisions.insert(info);
+					
 				}
 			}
 		}
@@ -369,7 +371,7 @@ void PhysicsSystem::NarrowPhase() {
 		CollisionDetection::CollisionInfo info = *i;
 		if (CollisionDetection::ObjectIntersection(info.a, info.b, info)) {
 			info.framesLeft = numCollisionFrames;
-			ImpulseResolveCollision(*info.a,*info.b, info.point);
+			if (!info.a->isTrigger && !info.b->isTrigger) ImpulseResolveCollision(*info.a,*info.b, info.point);
 			allCollisions.insert(info);
 		}
 	}

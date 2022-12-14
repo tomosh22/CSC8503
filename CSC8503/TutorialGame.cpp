@@ -22,7 +22,7 @@ using namespace CSC8503;
 
 #pragma region PathfindingObject
 PathfindingObject::PathfindingObject(NavigationGrid* grid, Vector3 startPos,
-	Vector3 endPos,GameObject* player,GameWorld* world, std::vector<Target*>* mazeTargets) {
+	GameObject* player,GameWorld* world, std::vector<Target*>* mazeTargets) {
 	
 	stateMachine = new StateMachine();
 	
@@ -56,7 +56,7 @@ PathfindingObject::PathfindingObject(NavigationGrid* grid, Vector3 startPos,
 			time += dt;
 			Debug::DrawLine(dest, dest + Vector3(0, 1, 0),Vector4(0,1,0,1));
 			Debug::DrawLine(destWaypoint, destWaypoint + Vector3(0, 1, 0),Vector4(1,0,0,1));
-			DisplayPathfinding();
+			//DisplayPathfinding();
 		}
 	);
 	State* chasingPlayer = new State(
@@ -234,8 +234,11 @@ void TutorialGame::UpdateMaze(float dt) {
 		if (score == 0)std::cout << "draw";
 		else std::cout << ((score > 0) ? "win" : "lose");
 	}
-	player->UpdatePowerUps(dt);
-	std::cout << player->affectedByFriction << '\n';
+	//player->UpdatePowerUps(dt);
+	if (player->frictionTime > 0) {
+		player->UpdateFrictionTime(dt);
+	}
+	//std::cout << player->affectedByFriction << '\n';
 
 }
 
@@ -775,9 +778,9 @@ void TutorialGame::InitMaze() {
 	Reset();
 	InitDefaultFloor();
 	AddMazeToWorld();
-	player = AddPlayerToWorld(Vector3(80,0,45));
+	player = AddPlayerToWorld(Vector3(10,0,180));
 	player->GetRenderObject()->SetColour(Vector4(1, 0.6, 1, 1));
-	pathfinder = AddPathfindingObjectToWorld();
+	pathfinder = AddPathfindingObjectToWorld(Vector3(180, 0, 10));
 	lockedObject = player;
 	selectionObject = lockedObject;
 	mode = Gamemode::maze;
@@ -786,7 +789,10 @@ void TutorialGame::InitMaze() {
 void TutorialGame::InitWorld() {
 	Reset();
 
-	player = AddPlayerToWorld(Vector3(80, 10, 45));
+	//player = AddPlayerToWorld(Vector3(80, 10, 45));
+	AddSphereToWorld(Vector3(90, 10, 55),2);
+	AddCapsuleToWorld(Vector3(70, 10, 35),2,8);
+	AddCapsuleToWorld(Vector3(85, 10, 35),2,8);
 	lockedObject = player;
 	selectionObject = lockedObject;
 	mode = Gamemode::normal;
@@ -832,14 +838,11 @@ void TutorialGame::AddMazeToWorld() {
 			n.type = type;
 			n.position = Vector3((float)(x * nodeSize), 0, (float)(y * nodeSize));
 			std::cout << type << '\n';
-			if (type == 120)mazeAABBs.emplace_back(AddCubeToWorld(n.position, { (float)nodeSize / 2,(float)nodeSize / 2,(float)nodeSize / 2 }, 0.5));
+			if (type == 120)mazeAABBs.emplace_back(AddOBBToWorld(n.position, { (float)nodeSize / 2,(float)nodeSize / 2,(float)nodeSize / 2 }, 0));
 			else if (type == 103)HingeTest(n.position, nodeSize);
-			else if (rand() % 10 == 0) { 
-				if (n.position == Vector3(0, 0, 0)) {
-					std::cout << "eh?\n";
-				}
-				mazeTargets.emplace_back(AddFrictionTargetToWorld(n.position, &mazeTargets));
-			}
+			else if (rand() % 10 == 0)mazeTargets.emplace_back(AddTargetToWorld(n.position, &mazeTargets));
+			else if (rand() % 10 == 0)AddFrictionTargetToWorld(n.position, nullptr);
+			
 		}
 	}
 	return;
@@ -859,6 +862,7 @@ Target* TutorialGame::AddTargetToWorld(const Vector3& position, std::vector<Targ
 		.SetPosition(position);
 
 	sphere->SetRenderObject(new RenderObject(&sphere->GetTransform(), sphereMesh, basicTex, basicShader));
+	sphere->GetRenderObject()->SetColour(Vector4(0, 1, 0, 1));
 	sphere->SetPhysicsObject(new PhysicsObject(&sphere->GetTransform(), sphere->GetBoundingVolume()));
 
 	sphere->GetPhysicsObject()->SetInverseMass(0);
@@ -886,6 +890,7 @@ FrictionTarget* TutorialGame::AddFrictionTargetToWorld(const Vector3& position, 
 		.SetPosition(position);
 
 	sphere->SetRenderObject(new RenderObject(&sphere->GetTransform(), sphereMesh, basicTex, basicShader));
+	sphere->GetRenderObject()->SetColour(Vector4(1, 0.5, 0, 1));
 	sphere->SetPhysicsObject(new PhysicsObject(&sphere->GetTransform(), sphere->GetBoundingVolume()));
 
 	sphere->GetPhysicsObject()->SetInverseMass(0);
@@ -976,6 +981,28 @@ GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius
 	world->AddGameObject(sphere);
 
 	return sphere;
+}
+
+GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float radius,float halfHeight, float inverseMass) {
+	GameObject* capsule = new GameObject();
+
+	
+	CapsuleVolume* volume = new CapsuleVolume(halfHeight,radius);
+	capsule->SetBoundingVolume((CollisionVolume*)volume);
+
+	capsule->GetTransform()
+		.SetScale(Vector3(radius*2, halfHeight, radius * 2))
+		.SetPosition(position);
+
+	capsule->SetRenderObject(new RenderObject(&capsule->GetTransform(), capsuleMesh, basicTex, basicShader));
+	capsule->SetPhysicsObject(new PhysicsObject(&capsule->GetTransform(), capsule->GetBoundingVolume()));
+
+	capsule->GetPhysicsObject()->SetInverseMass(inverseMass);
+	capsule->GetPhysicsObject()->InitCubeInertia();
+
+	world->AddGameObject(capsule);
+
+	return capsule;
 }
 
 GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass) {
@@ -1115,16 +1142,14 @@ StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position) {
 	return apple;
 }
 
-PathfindingObject* TutorialGame::AddPathfindingObjectToWorld() {
-	Vector3 startPos(80, 0, 10);
-	Vector3 endPos(80, 0, 80);
-	PathfindingObject* apple = new PathfindingObject(grid,startPos,endPos,player,world,&mazeTargets);
+PathfindingObject* TutorialGame::AddPathfindingObjectToWorld(const Vector3& position) {
+	PathfindingObject* apple = new PathfindingObject(grid,position,player,world,&mazeTargets);
 	float radius = 5;
 	SphereVolume* volume = new SphereVolume(radius);
 	apple->SetBoundingVolume((CollisionVolume*)volume);
 	apple->GetTransform()
 		.SetScale(Vector3(1, 1, 1)*radius)
-		.SetPosition(startPos);
+		.SetPosition(position);
 
 	apple->SetRenderObject(new RenderObject(&apple->GetTransform(), sphereMesh, nullptr, basicShader));
 	apple->SetPhysicsObject(new PhysicsObject(&apple->GetTransform(), apple->GetBoundingVolume()));

@@ -53,6 +53,9 @@ void OrientationConstraint::UpdateConstraint(float dt) {
 
 			physA->ApplyAngularImpulse(aImpulse);
 			physB->ApplyAngularImpulse(bImpulse);
+			if (Window::GetWindow()->GetKeyboard()->KeyDown(KeyboardKeys::L)) {
+				bool a = false;
+			}
 			if (Window::GetWindow()->GetMouse()->ButtonDown(MouseButtons::RIGHT)) {
 				bool a = false;
 				//std::cout << offsetDir << '\n';
