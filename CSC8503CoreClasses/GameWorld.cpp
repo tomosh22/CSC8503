@@ -51,7 +51,6 @@ void GameWorld::RemoveGameObject(GameObject* o, bool andDelete) {
 	if (andDelete) {
 		delete o;
 		o = nullptr;
-		std::cout << "deleted";
 	}
 	worldStateCounter++;
 }
@@ -90,7 +89,7 @@ bool GameWorld::Raycast(Ray& r, RayCollision& closestCollision, bool closestObje
 	RayCollision collision;
 
 	for (auto& i : gameObjects) {
-		if (!i->GetBoundingVolume()) { //objects might not be collideable etc...
+		if (!i->GetBoundingVolume() || i->ignoreRaycast) { //objects might not be collideable etc...
 			continue;
 		}
 		if (i == ignoreThis) {

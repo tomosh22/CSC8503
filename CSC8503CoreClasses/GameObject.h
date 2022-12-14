@@ -77,6 +77,9 @@ namespace NCL::CSC8503 {
 		bool isTrigger;
 		bool deleteOnTrigger;
 		bool affectedByFriction;
+		float linearDamping;
+		float angularDamping;
+		bool ignoreRaycast;
 		
 	protected:
 		Transform			transform;

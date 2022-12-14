@@ -305,6 +305,8 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	physA->ApplyAngularImpulse(Vector3::Cross(relativeA, -fullImpulse));
 	physB->ApplyAngularImpulse(Vector3::Cross(relativeB, fullImpulse));
 
+	
+
 	if (a.affectedByFriction || b.affectedByFriction) {
 		Vector3 tangent = contactVel - (p.normal * Vector3::Dot(contactVel, p.normal));
 	tangent.Normalise();
@@ -430,9 +432,10 @@ void PhysicsSystem::IntegrateVelocity(float dt) {
 	std::vector<GameObject*>::const_iterator last;
 	gameWorld.GetObjectIterators(first, last);
 
-	float frameLinearDamping = 1 - (0.4 * dt);
+	
 	for (auto i = first; i != last; i++)
 	{
+		float frameLinearDamping = 1 - ((*i)->linearDamping * dt);
 		PhysicsObject* object = (*i)->GetPhysicsObject();
 		if (object == nullptr)continue;
 		Transform& transform = (*i)->GetTransform();
@@ -452,7 +455,7 @@ void PhysicsSystem::IntegrateVelocity(float dt) {
 
 		
 
-		float frameAngularDamping = 1 - 0.4 * dt;
+		float frameAngularDamping = 1 - ((*i)->angularDamping * dt);
 		angVel *= frameAngularDamping;
 		object->SetAngularVelocity(angVel);
 		/*if ((*i)->GetWorldID() == 999) {

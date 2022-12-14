@@ -24,11 +24,16 @@ namespace NCL {
 		
 
 		
-
+		
 		class Player : public GameObject {
 		public:
-			Player() : GameObject() {
+			Player(Vector3 spawnPoint, GameWorld* world) : GameObject() {
 				frictionTime = 0;
+				//this->game = game;
+				this->spawnPoint = spawnPoint;
+				this->world = world;
+				this->linearDamping = 2;
+				this->angularDamping = 2;
 			};
 			/*std::vector<PowerUp*> powerUps;
 			void AddPowerUp(PowerUp* powerUp, float duration) {
@@ -47,7 +52,14 @@ namespace NCL {
 					else it++;
 				}
 			}*/
+			GameWorld* world;
+			Vector3 spawnPoint;
+			//TutorialGame* game;
 			float frictionTime;
+			void Respawn() {
+				GetTransform().SetPosition(spawnPoint);
+				GetPhysicsObject()->ClearForces();
+			};
 			void UpdateFrictionTime(float dt) {
 				frictionTime -= dt;
 				if (frictionTime <= 0) {
@@ -55,6 +67,30 @@ namespace NCL {
 					affectedByFriction = true;
 				}
 			}
+			GameObject* Shoot() {
+				Vector3 localForward = GetTransform().GetOrientation() * Vector3(0, 0, 1);
+				//Bullet* capsule = new Bullet(world);
+
+
+				/*CapsuleVolume* volume = new CapsuleVolume(halfHeight, radius);
+				capsule->SetBoundingVolume((CollisionVolume*)volume);
+
+				capsule->GetTransform()
+					.SetScale(Vector3(radius * 2, halfHeight, radius * 2))
+					.SetPosition(position);
+
+				capsule->SetRenderObject(new RenderObject(&capsule->GetTransform(), capsuleMesh, basicTex, basicShader));
+				capsule->SetPhysicsObject(new PhysicsObject(&capsule->GetTransform(), capsule->GetBoundingVolume()));
+
+				capsule->GetPhysicsObject()->SetInverseMass(inverseMass);
+				capsule->GetPhysicsObject()->InitCubeInertia();
+
+				world->AddGameObject(capsule);
+
+				return capsule;*/
+
+			}
+
 		};
 
 		class PowerUp {
@@ -81,7 +117,7 @@ namespace NCL {
 
 #pragma region targets
 		
-
+		
 		class Target : public GameObject {
 		public:
 			Target() {};
@@ -136,14 +172,19 @@ namespace NCL {
 		class PathfindingObject : public StateGameObject {
 		public:
 			PathfindingObject(NavigationGrid* grid, Vector3 startPos, 
-				GameObject* player, GameWorld* world, std::vector<Target*>* mazeTargets);
+				GameObject* player, GameWorld* world, std::vector<Target*>* mazeTargets
+				, MeshGeometry* capsuleMesh, TextureBase* basicTex, ShaderBase* basicShader,std::vector<GameObject*>* mazeBullets);
 			~PathfindingObject();
+
+			void Shoot(Vector3 direction);
 
 			virtual void Update(float dt);
 			bool CanSeePlayer();
 			Target* GetNearestMazeTarget(Vector3 from);
 			std::vector<Target*>* mazeTargets;
+			std::vector<GameObject*>* mazeBullets;
 			void DisplayPathfinding();
+			void Respawn();
 		protected:
 			NavigationPath path;
 			void FollowPath(float dt);
@@ -156,8 +197,59 @@ namespace NCL {
 			GameWorld* world;
 			NavigationGrid* grid;
 			int* testInt = new int(123456);
+			Vector3 startPos;
 
+			MeshGeometry* capsuleMesh;
+			TextureBase* basicTex;
+			ShaderBase* basicShader;
+			float invFireRate;
+			float lastShotTime;
+			bool recalculatePath;
+		};
 
+		class Bullet : public GameObject {
+		public:
+			Bullet(GameWorld* world, float lifetime, std::vector<GameObject*>* parentVector, string objectName = "") : GameObject(objectName) {
+				this->isTrigger = true;
+				this->world = world;
+				this->deleteOnTrigger = true;
+				this->parentVector = parentVector;
+				this->lifetime = lifetime;
+				this->linearDamping = 0.1;
+				this->angularDamping = 0.1;
+				this->deleteMe = false;
+				this->ignoreRaycast = true;
+			}
+			virtual void OnCollisionBegin(GameObject* otherObject) override {
+				if (otherObject->GetWorldID() == (int)ObjectIDs::player) {
+					((Player*)otherObject)->Respawn();
+				}
+				if (otherObject->GetWorldID() == (int)ObjectIDs::enemy) {
+					((PathfindingObject*)otherObject)->Respawn();
+				}
+				deleteMe = true;
+				/*if (parentVector != nullptr) {
+					std::vector<GameObject*>::iterator it = parentVector->begin();
+					while (it != parentVector->end()) {
+						if ((*it) == this) {
+							it = parentVector->erase(it);
+						}
+						else it++;
+					}
+				}
+				world->RemoveGameObject(this, true);*/
+			}
+			bool Update(float dt) {
+				lifetime -= dt;
+				if (lifetime <= 0) {
+					return false;
+				}
+				return true;
+			};
+			float lifetime;
+			GameWorld* world;
+			std::vector<GameObject*>* parentVector;
+			bool deleteMe;
 		};
 #pragma endregion
 
@@ -173,6 +265,7 @@ namespace NCL {
 
 			virtual void UpdateGame(float dt);
 
+			GameObject* AddCapsuleToWorld(const Vector3& position, float radius, float halfHeight, float inverseMass = 10.0f);
 
 
 			float camDistance;
@@ -221,7 +314,6 @@ namespace NCL {
 
 			GameObject* AddFloorToWorld(const Vector3& position);
 			GameObject* AddSphereToWorld(const Vector3& position, float radius, float inverseMass = 10.0f);
-			GameObject* AddCapsuleToWorld(const Vector3& position, float radius,float halfHeight, float inverseMass = 10.0f);
 			GameObject* AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
 			GameObject* AddOBBToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
 
@@ -279,6 +371,7 @@ namespace NCL {
 
 			std::vector<GameObject*> mazeAABBs;
 			std::vector<Target*> mazeTargets;
+			std::vector<GameObject*> mazeBullets;
 			int targetIndex;
 			PathfindingObject* pathfinder = nullptr;
 

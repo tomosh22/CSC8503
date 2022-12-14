@@ -430,25 +430,26 @@ bool CollisionDetection::AABBSphereIntersectionSwapped(const SphereVolume& volum
 
 bool  CollisionDetection::OBBSphereIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
 	const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
+	
 
 	Vector3 deltaPos = worldTransformB.GetPosition() - worldTransformA.GetPosition();
+	deltaPos = worldTransformA.GetOrientation().Conjugate() * deltaPos;
 
-	Transform tempTransform;
-	tempTransform.SetOrientation(worldTransformA.GetOrientation().Conjugate());
-	tempTransform.SetPosition(deltaPos);
+	Vector3 boxSize = volumeA.GetHalfDimensions();
+	Vector3 closestPointOnBox = Maths::Clamp(deltaPos, -boxSize, boxSize);
+	Vector3 localPoint = deltaPos - closestPointOnBox;
+	float distance = localPoint.Length();
+	if (distance < volumeB.GetRadius()) {
+		Vector3 collisionNormal = worldTransformA.GetOrientation() * localPoint.Normalised();
+		float pen = volumeB.GetRadius() - distance;
 
-	
-	//tempTransform.SetPosition(worldTransformA.GetOrientation().Conjugate() * deltaPos);
+		Vector3 localA = closestPointOnBox;
+		Vector3 localB = -collisionNormal * volumeB.GetRadius();
 
-	AABBVolume tempAABB(volumeA.GetHalfDimensions());
-	Transform blankTransform;
-	blankTransform.SetPosition(Vector3());
-
-	if (AABBSphereIntersection(tempAABB, blankTransform, volumeB, tempTransform, collisionInfo)) {
-		collisionInfo.point.localA = worldTransformA.GetOrientation() * collisionInfo.point.localA;
-		collisionInfo.point.localB = worldTransformA.GetOrientation() * collisionInfo.point.localB;
+		collisionInfo.AddContactPoint(localA, localB, collisionNormal, pen, false);
 		return true;
 	}
+
 	return false;
 }
 

@@ -22,25 +22,44 @@ using namespace CSC8503;
 
 #pragma region PathfindingObject
 PathfindingObject::PathfindingObject(NavigationGrid* grid, Vector3 startPos,
-	GameObject* player,GameWorld* world, std::vector<Target*>* mazeTargets) {
+	GameObject* player,GameWorld* world, std::vector<Target*>* mazeTargets
+	,MeshGeometry* capsuleMesh, TextureBase* basicTex,ShaderBase* basicShader,
+	std::vector<GameObject*>* mazeBullets) {
 	
 	stateMachine = new StateMachine();
-	
 	time = 0;
 	this->player = player;
 	this->world = world;
 	this->mazeTargets = mazeTargets;
+	this->mazeBullets = mazeBullets;
 	this->grid = grid;
 	std::cout << grid << '\n';
+	this->startPos = startPos;
 	dest = GetNearestMazeTarget(startPos)->GetTransform().GetPosition();
 	bool found = this->grid->FindPath(startPos, dest, path);
 	path.PopWaypoint(destWaypoint);
 	*testInt = 98765;
 
+	this->capsuleMesh = capsuleMesh;
+	this->basicShader = basicShader;
+	this->basicTex = basicTex;
+
+	this->linearDamping = 2;
+	this->angularDamping = 2;
+
+	this->invFireRate = (float)1/4;
+	this->lastShotTime = 0;
+	this->recalculatePath = false;
+	
 	State* movingForward = new State(
 		[&](float dt)->void {
 			//std::cout << dest << ' ' << destWaypoint << '\n';
 			Vector3 position = GetTransform().GetPosition();
+			if (recalculatePath) {
+				this->grid->FindPath(GetTransform().GetPosition(), dest, path);
+				path.PopWaypoint(destWaypoint);
+				recalculatePath = false;
+			}
 			//std::cout << position << '\n';
 			if ((position - destWaypoint).Length() < 5) {
 				finished = path.PopWaypoint(destWaypoint);
@@ -51,27 +70,67 @@ PathfindingObject::PathfindingObject(NavigationGrid* grid, Vector3 startPos,
 				this->grid->FindPath(GetTransform().GetPosition(), dest, path);
 				path.PopWaypoint(destWaypoint);
 			}
-			
-			GetPhysicsObject()->AddForce((this->destWaypoint - position).Normalised() * 5);
+			GetPhysicsObject()->AddForce((this->destWaypoint - position).Normalised() * 100);
 			time += dt;
 			Debug::DrawLine(dest, dest + Vector3(0, 1, 0),Vector4(0,1,0,1));
 			Debug::DrawLine(destWaypoint, destWaypoint + Vector3(0, 1, 0),Vector4(1,0,0,1));
+			std::cout << destWaypoint << '\n';
 			//DisplayPathfinding();
 		}
 	);
 	State* chasingPlayer = new State(
 		[&](float dt)->void {
 			Vector3 position = GetTransform().GetPosition();
-			GetPhysicsObject()->AddForce(this->player->GetTransform().GetPosition() - position);
-
+			Vector3 deltaPos = this->player->GetTransform().GetPosition() - position;
+			GetPhysicsObject()->AddForce(deltaPos.Normalised() * 50);
+			lastShotTime += dt;
+			if (lastShotTime >= invFireRate) {
+				Shoot(deltaPos.Normalised());
+				lastShotTime = 0;
+			}
+			
+			recalculatePath = true;
 		}
 	);
 	stateMachine->AddState(movingForward);
 	stateMachine->AddState(chasingPlayer);
 
-	//stateMachine->AddTransition(new StateTransition(movingForward, chasingPlayer, [&]()->bool {return CanSeePlayer(); }));
-	//stateMachine->AddTransition(new StateTransition(chasingPlayer, movingForward, [&]()->bool {return !CanSeePlayer(); }));
+	stateMachine->AddTransition(new StateTransition(movingForward, chasingPlayer, [&]()->bool {return CanSeePlayer(); }));
+	stateMachine->AddTransition(new StateTransition(chasingPlayer, movingForward, [&]()->bool {return !CanSeePlayer(); }));
+	
+}
 
+void PathfindingObject::Shoot(Vector3 direction) {
+	Bullet* capsule = new Bullet(world,2,mazeBullets);
+
+	float radius = 0.5;
+	float halfHeight = 2;
+	//todo change to capsule once cube collisions implemented
+	SphereVolume* volume = new SphereVolume(radius);
+	capsule->SetBoundingVolume((CollisionVolume*)volume);
+	Quaternion rot = Quaternion::AxisAngleToQuaterion(GetTransform().GetOrientation() * Vector3(1, 0, 0),90);
+	capsule->GetTransform()
+		.SetScale(Vector3(radius * 2, halfHeight, radius * 2))
+		.SetPosition(GetTransform().GetPosition() + direction * 10 )
+		.SetOrientation(rot);
+	
+
+	capsule->SetRenderObject(new RenderObject(&capsule->GetTransform(), capsuleMesh, basicTex, basicShader));
+	capsule->SetPhysicsObject(new PhysicsObject(&capsule->GetTransform(), capsule->GetBoundingVolume()));
+
+	capsule->GetPhysicsObject()->SetInverseMass(0);
+	capsule->GetPhysicsObject()->InitCubeInertia();
+
+	world->AddGameObject(capsule);
+
+	capsule->GetPhysicsObject()->SetLinearVelocity(direction * 10);
+	mazeBullets->push_back(capsule);
+	//return capsule;
+}
+
+void PathfindingObject::Respawn() {
+	GetTransform().SetPosition(startPos);
+	GetPhysicsObject()->ClearForces();
 }
 
 void PathfindingObject::Update(float dt) {
@@ -237,6 +296,17 @@ void TutorialGame::UpdateMaze(float dt) {
 	//player->UpdatePowerUps(dt);
 	if (player->frictionTime > 0) {
 		player->UpdateFrictionTime(dt);
+	}
+	if (mazeBullets.size() > 0) {
+		std::vector<GameObject*>::iterator it = mazeBullets.begin();
+		while (it != mazeBullets.end()) {
+			if (((Bullet*)*it)->deleteMe || !((Bullet*)*it)->Update(dt)) {
+				world->RemoveGameObject(*it, true);
+				it = mazeBullets.erase(it);
+			}
+			else it++;
+		}
+		
 	}
 	//std::cout << player->affectedByFriction << '\n';
 
@@ -521,14 +591,15 @@ void TutorialGame::MazeMovement(float dt) {
 		selectionObject->GetPhysicsObject()->AddForce(-localForward * 100);
 	}
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
-		selectionObject->GetPhysicsObject()->AddTorque(-localUp * 100);
+		selectionObject->GetPhysicsObject()->AddTorque(-localUp * 200);
 	}
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
-		selectionObject->GetPhysicsObject()->AddTorque(localUp * 100);
+		selectionObject->GetPhysicsObject()->AddTorque(localUp * 200);
 	}
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RETURN)) {
-		selectionObject->GetPhysicsObject()->AddForce(localUp * 50);
+		selectionObject->GetPhysicsObject()->ApplyLinearImpulse(localUp * 25);
 	}
+
 	
 
 	
@@ -778,7 +849,8 @@ void TutorialGame::InitMaze() {
 	Reset();
 	InitDefaultFloor();
 	AddMazeToWorld();
-	player = AddPlayerToWorld(Vector3(10,0,180));
+	//player = AddPlayerToWorld(Vector3(10,0,180));
+	player = AddPlayerToWorld(Vector3(180,0,50));
 	player->GetRenderObject()->SetColour(Vector4(1, 0.6, 1, 1));
 	pathfinder = AddPathfindingObjectToWorld(Vector3(180, 0, 10));
 	lockedObject = player;
@@ -790,9 +862,11 @@ void TutorialGame::InitWorld() {
 	Reset();
 
 	//player = AddPlayerToWorld(Vector3(80, 10, 45));
-	AddSphereToWorld(Vector3(90, 10, 55),2);
+	//AddSphereToWorld(Vector3(90, 10, 55),2);
 	AddCapsuleToWorld(Vector3(70, 10, 35),2,8);
-	AddCapsuleToWorld(Vector3(85, 10, 35),2,8);
+	//AddCapsuleToWorld(Vector3(85, 10, 35),2,8);
+	AddOBBToWorld(Vector3(-20, 10, -20), Vector3(5, 5, 5));
+	AddSphereToWorld(Vector3(-40, 10, -20), 5);
 	lockedObject = player;
 	selectionObject = lockedObject;
 	mode = Gamemode::normal;
@@ -809,7 +883,7 @@ void TutorialGame::InitWorld() {
 	//InitDefaultFloor();
 
 	//BridgeConstraintTest();
-	HingeTest(Vector3(),1);
+	//HingeTest(Vector3(),1);
 
 	//AddMazeToWorld();
 	//testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
@@ -1056,7 +1130,7 @@ Player* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	float meshSize		= 5;
 	float inverseMass	= 0.5f;
 
-	Player* character = new Player();
+	Player* character = new Player(position,world);
 	//SphereVolume* volume  = new SphereVolume(meshSize);
 	OBBVolume* volume = new OBBVolume(Vector3(1, 1, 1)*meshSize/2);
 
@@ -1143,7 +1217,7 @@ StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position) {
 }
 
 PathfindingObject* TutorialGame::AddPathfindingObjectToWorld(const Vector3& position) {
-	PathfindingObject* apple = new PathfindingObject(grid,position,player,world,&mazeTargets);
+	PathfindingObject* apple = new PathfindingObject(grid,position,player,world,&mazeTargets,capsuleMesh,basicTex,basicShader,&mazeBullets);
 	float radius = 5;
 	SphereVolume* volume = new SphereVolume(radius);
 	apple->SetBoundingVolume((CollisionVolume*)volume);
@@ -1154,7 +1228,7 @@ PathfindingObject* TutorialGame::AddPathfindingObjectToWorld(const Vector3& posi
 	apple->SetRenderObject(new RenderObject(&apple->GetTransform(), sphereMesh, nullptr, basicShader));
 	apple->SetPhysicsObject(new PhysicsObject(&apple->GetTransform(), apple->GetBoundingVolume()));
 
-	apple->GetPhysicsObject()->SetInverseMass(1.0f);
+	apple->GetPhysicsObject()->SetInverseMass(0.5f);
 	apple->GetPhysicsObject()->InitSphereInertia();
 	
 	

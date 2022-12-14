@@ -17,6 +17,9 @@ GameObject::GameObject(string objectName)	{
 	isTrigger = false;
 	deleteOnTrigger = false;
 	affectedByFriction = true;
+	linearDamping = 0.4;
+	angularDamping = 0.4;
+	ignoreRaycast = false;
 }
 
 GameObject::~GameObject()	{
