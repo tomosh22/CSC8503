@@ -28,7 +28,6 @@ namespace NCL {
 		class Player : public GameObject {
 		public:
 			Player(Vector3 spawnPoint, GameWorld* world) : GameObject() {
-				frictionTime = 0;
 				//this->game = game;
 				this->spawnPoint = spawnPoint;
 				this->world = world;
@@ -95,17 +94,26 @@ namespace NCL {
 
 		class PowerUp {
 		public:
-			std::function<void(Player*)> startFunc;
-			std::function<void(Player*)> endFunc;
+			std::function<void(GameObject*)> startFunc;
+			std::function<void(GameObject*)> endFunc;
 			float timeLeft;
 		};
+		
 		class FrictionPowerUp : public PowerUp {
 		public:
-			FrictionPowerUp(Player* player) {
-				startFunc = [&](Player* player)->void {
-					player->affectedByFriction = false;
-					player->frictionTime = 5;
+			FrictionPowerUp(GameObject* player) {
+				if (player->GetWorldID() == (int)ObjectIDs::player) {
+					startFunc = [&](GameObject* player)->void {
+						player->affectedByFriction = false;
+						((Player*)player)->frictionTime = 5;
 				};
+				}
+				else if (player->GetWorldID() == (int)ObjectIDs::enemy) {
+					startFunc = [&](GameObject* player)->void {
+						player->affectedByFriction = false;
+						player->frictionTime = 5;
+					};
+				}
 				/*startFunc = [&](GameObject* player)->void {
 					player->affectedByFriction = false;
 				};
@@ -157,10 +165,14 @@ namespace NCL {
 
 			};
 			void OnCollisionBegin(GameObject* otherObject) override {
-				if (otherObject->GetWorldID() == (int)ObjectIDs::player || otherObject->GetWorldID() == (int)ObjectIDs::player) {
-					FrictionPowerUp* powerUp = new FrictionPowerUp((Player*)otherObject);
-					powerUp->startFunc((Player*)otherObject);
+				if (otherObject->GetWorldID() == (int)ObjectIDs::player) {
+					FrictionPowerUp* powerUp = new FrictionPowerUp(otherObject);
+					powerUp->startFunc(otherObject);
 					//((Player*)otherObject)->AddPowerUp((PowerUp*)powerUp, 5);
+				}
+				else if (otherObject->GetWorldID() == (int)ObjectIDs::enemy) {
+					FrictionPowerUp* powerUp = new FrictionPowerUp(otherObject);
+					powerUp->startFunc(otherObject);
 				}
 				DestroySelf();
 			}
@@ -185,6 +197,8 @@ namespace NCL {
 			std::vector<GameObject*>* mazeBullets;
 			void DisplayPathfinding();
 			void Respawn();
+			float frictionTime;
+			void UpdateFrictionTime(float dt);
 		protected:
 			NavigationPath path;
 			void FollowPath(float dt);
@@ -205,6 +219,8 @@ namespace NCL {
 			float invFireRate;
 			float lastShotTime;
 			bool recalculatePath;
+
+			
 		};
 
 		class Bullet : public GameObject {

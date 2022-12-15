@@ -80,6 +80,7 @@ namespace NCL::CSC8503 {
 		float linearDamping;
 		float angularDamping;
 		bool ignoreRaycast;
+		float frictionTime;
 		
 	protected:
 		Transform			transform;

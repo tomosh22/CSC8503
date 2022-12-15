@@ -20,6 +20,7 @@ GameObject::GameObject(string objectName)	{
 	linearDamping = 0.4;
 	angularDamping = 0.4;
 	ignoreRaycast = false;
+	frictionTime = 0;
 }
 
 GameObject::~GameObject()	{

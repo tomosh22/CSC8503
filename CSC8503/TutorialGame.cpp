@@ -50,6 +50,7 @@ PathfindingObject::PathfindingObject(NavigationGrid* grid, Vector3 startPos,
 	this->invFireRate = (float)1/4;
 	this->lastShotTime = 0;
 	this->recalculatePath = false;
+
 	
 	State* movingForward = new State(
 		[&](float dt)->void {
@@ -98,6 +99,14 @@ PathfindingObject::PathfindingObject(NavigationGrid* grid, Vector3 startPos,
 	stateMachine->AddTransition(new StateTransition(movingForward, chasingPlayer, [&]()->bool {return CanSeePlayer(); }));
 	stateMachine->AddTransition(new StateTransition(chasingPlayer, movingForward, [&]()->bool {return !CanSeePlayer(); }));
 	
+}
+
+void PathfindingObject::UpdateFrictionTime(float dt) {
+	frictionTime -= dt;
+	if (frictionTime <= 0) {
+		frictionTime = 0;
+		affectedByFriction = true;
+	}
 }
 
 void PathfindingObject::Shoot(Vector3 direction) {
@@ -297,6 +306,10 @@ void TutorialGame::UpdateMaze(float dt) {
 	if (player->frictionTime > 0) {
 		player->UpdateFrictionTime(dt);
 	}
+	if (pathfinder->frictionTime > 0) {
+		pathfinder->UpdateFrictionTime(dt);
+	}
+	std::cout << pathfinder->affectedByFriction;
 	if (mazeBullets.size() > 0) {
 		std::vector<GameObject*>::iterator it = mazeBullets.begin();
 		while (it != mazeBullets.end()) {
@@ -808,6 +821,7 @@ void TutorialGame::Reset() {
 	pathfinder = nullptr;
 	score = 0;
 	mazeTargets.clear();
+	mazeBullets.clear();
 }
 
 void TutorialGame::GenerateTargets() {
